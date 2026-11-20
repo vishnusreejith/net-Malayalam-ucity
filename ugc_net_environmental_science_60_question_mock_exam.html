@@ -1,0 +1,1828 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UGC NET Environmental Science — 60-Question Mock Exam &amp; Worked Solutions</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Inter Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+          },
+        },
+      },
+    };
+  </script>
+</head>
+<body class="bg-slate-50 text-slate-900 font-sans antialiased min-h-screen flex flex-col">
+
+  <!-- Top Navigation & Exam Control Header -->
+  <header class="bg-emerald-950 text-white sticky top-0 z-30 shadow-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-wrap items-center justify-between gap-3">
+      <!-- Brand Title -->
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-emerald-600 flex items-center justify-center font-extrabold text-lg shadow-inner">
+          EN
+        </div>
+        <div>
+          <h1 class="text-base sm:text-lg font-bold tracking-tight leading-tight">
+            UGC NET Environmental Science
+          </h1>
+          <p class="text-xs text-emerald-200">
+            60 Questions (47 Numericals + 13 Conceptual) &bull; 3-Hour Mock &amp; Worked Solutions
+          </p>
+        </div>
+      </div>
+
+      <!-- Mode Switcher & Timer -->
+      <div class="flex flex-wrap items-center gap-2 sm:gap-3">
+        <!-- Study vs Exam Mode Toggle -->
+        <div class="bg-emerald-900/90 p-1 rounded-xl flex items-center border border-emerald-800">
+          <button id="btn-mode-study" onclick="setMode('study')" class="px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all bg-white text-emerald-950 shadow-sm">
+            Study Mode
+          </button>
+          <button id="btn-mode-exam" onclick="setMode('exam')" class="px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all text-emerald-100 hover:text-white">
+            3-Hr Exam
+          </button>
+        </div>
+
+        <!-- Countdown Timer -->
+        <div class="flex items-center gap-2 bg-slate-900/70 border border-emerald-800 px-3 py-1.5 rounded-xl">
+          <span class="text-xs text-emerald-300 font-medium hidden sm:inline">Time:</span>
+          <span id="timer-display" class="font-mono text-sm sm:text-base font-bold text-amber-300 tracking-wider">03:00:00</span>
+          <button id="btn-timer-toggle" onclick="toggleTimer()" class="text-xs bg-emerald-700 hover:bg-emerald-600 px-2 py-1 rounded-lg font-medium transition-colors">
+            Start
+          </button>
+        </div>
+
+        <!-- Submit / Scorecard Button -->
+        <button onclick="openSubmitModal()" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs sm:text-sm px-3.5 py-2 rounded-xl shadow-sm transition-colors">
+          Scorecard
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Filter & Progress Sub-bar -->
+  <section class="bg-white border-b border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-wrap items-center justify-between gap-3">
+      <!-- Topic Filter -->
+      <div class="flex flex-wrap items-center gap-2">
+        <label for="topic-filter" class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Topic:</label>
+        <select id="topic-filter" onchange="applyFilters()" class="text-xs sm:text-sm bg-slate-100 border border-slate-300 rounded-xl px-3 py-1.5 font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 max-w-full">
+          <option value="all">All 7 Topics (60 Questions)</option>
+          <option value="Ecosystem Structure & Functions">1. Ecosystem Structure &amp; Functions (9)</option>
+          <option value="Ecological Dynamics">2. Ecological Dynamics (8)</option>
+          <option value="Population & Community Ecology">3. Population &amp; Community Ecology (9)</option>
+          <option value="Biodiversity & Conservation">4. Biodiversity &amp; Conservation (8)</option>
+          <option value="Air Pollutants & Standards">5. Air Pollutants &amp; Standards (9)</option>
+          <option value="Monitoring & Impacts">6. Monitoring &amp; Impacts (9)</option>
+          <option value="Air Pollution Control Technologies">7. Air Pollution Control Technologies (8)</option>
+        </select>
+
+        <!-- Type Filter -->
+        <select id="type-filter" onchange="applyFilters()" class="text-xs sm:text-sm bg-slate-100 border border-slate-300 rounded-xl px-3 py-1.5 font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+          <option value="all">All Types</option>
+          <option value="Numerical">Numerical Only (47)</option>
+          <option value="Conceptual">Conceptual Only (13)</option>
+        </select>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="flex items-center gap-2">
+        <button onclick="openAllSolutionsModal()" class="text-xs sm:text-sm font-semibold text-emerald-800 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 px-3 py-1.5 rounded-xl transition-colors">
+          Formula Sheet
+        </button>
+        <button onclick="openResetModal()" class="text-xs sm:text-sm font-semibold text-rose-700 bg-rose-50 hover:bg-rose-100 border border-rose-200 px-3 py-1.5 rounded-xl transition-colors">
+          Reset
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Workspace -->
+  <main class="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 flex-grow grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+
+    <!-- Left/Main Column: Question Card & Worked Solution -->
+    <div class="lg:col-span-8 flex flex-col gap-5">
+      <!-- Active Question Card -->
+      <article class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+        <!-- Card Top Meta -->
+        <div class="px-5 sm:px-6 py-4 bg-slate-50 border-b border-slate-200 flex flex-wrap items-center justify-between gap-2">
+          <div class="flex flex-wrap items-center gap-2">
+            <span id="q-number-badge" class="bg-emerald-900 text-white text-xs font-bold px-2.5 py-1 rounded-lg">
+              Q1 / 60
+            </span>
+            <span id="q-topic-badge" class="bg-emerald-100 text-emerald-900 text-xs font-semibold px-2.5 py-1 rounded-lg">
+              Ecosystem Structure &amp; Functions
+            </span>
+            <span id="q-type-badge" class="bg-amber-100 text-amber-900 text-xs font-semibold px-2.5 py-1 rounded-lg">
+              Numerical
+            </span>
+          </div>
+          <button id="btn-mark-review" onclick="toggleReview()" class="text-xs font-semibold px-3 py-1.5 rounded-lg border border-slate-300 text-slate-600 hover:bg-slate-100 transition-colors">
+            Mark for Review
+          </button>
+        </div>
+
+        <!-- Question Body -->
+        <div class="p-5 sm:p-6">
+          <div id="q-text" class="text-base sm:text-lg font-medium text-slate-900 leading-relaxed mb-6">
+            Loading question...
+          </div>
+
+          <!-- Options List -->
+          <div id="options-container" class="flex flex-col gap-3">
+            <!-- Populated by JS -->
+          </div>
+
+          <!-- Action Controls -->
+          <div class="mt-6 pt-5 border-t border-slate-100 flex flex-wrap items-center justify-between gap-3">
+            <div class="flex items-center gap-2">
+              <button id="btn-prev" onclick="navigateQuestion(-1)" class="px-4 py-2.5 rounded-xl border border-slate-300 text-slate-700 font-semibold text-sm hover:bg-slate-50 disabled:opacity-40 transition-colors">
+                &larr; Previous
+              </button>
+              <button id="btn-next" onclick="navigateQuestion(1)" class="px-4 py-2.5 rounded-xl bg-slate-900 text-white font-semibold text-sm hover:bg-slate-800 disabled:opacity-40 transition-colors">
+                Next &rarr;
+              </button>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-2">
+              <button onclick="clearCurrentAnswer()" class="px-3.5 py-2.5 rounded-xl text-slate-500 hover:text-slate-800 hover:bg-slate-100 font-medium text-sm transition-colors">
+                Clear
+              </button>
+              <button id="btn-toggle-solution" onclick="toggleSolutionPanel()" class="px-4 py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-600 text-white font-semibold text-sm shadow-sm transition-colors">
+                Show Worked Example
+              </button>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Worked-Out Example / Step-by-Step Solution Card -->
+      <section id="solution-card" class="hidden bg-white rounded-2xl shadow-sm border-2 border-emerald-200 overflow-hidden">
+        <div class="px-5 sm:px-6 py-3.5 bg-emerald-50 border-b border-emerald-200 flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-600"></span>
+            <h2 class="text-sm sm:text-base font-bold text-emerald-950">
+              Worked-Out Example &amp; Step-by-Step Solution
+            </h2>
+          </div>
+          <span id="solution-status-badge" class="text-xs font-bold px-2.5 py-1 rounded-lg bg-emerald-200 text-emerald-900">
+            Solution
+          </span>
+        </div>
+        <div class="p-5 sm:p-6 space-y-4 text-sm sm:text-base text-slate-800 leading-relaxed">
+          <!-- Formula Box -->
+          <div id="sol-formula-wrap" class="bg-slate-900 text-emerald-300 font-mono text-xs sm:text-sm px-4 py-3 rounded-xl overflow-x-auto">
+            <span class="text-slate-400 uppercase text-[11px] font-sans font-bold tracking-wider block mb-1">Key Formula / Principle</span>
+            <div id="sol-formula"></div>
+          </div>
+
+          <!-- Step-by-step -->
+          <div>
+            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Step-by-Step Working</h3>
+            <div id="sol-steps" class="space-y-2"></div>
+          </div>
+
+          <!-- Final Answer Highlight -->
+          <div class="bg-emerald-50 border border-emerald-200 rounded-xl px-4 py-3 flex flex-wrap items-center justify-between gap-2">
+            <span class="text-xs font-bold uppercase tracking-wider text-emerald-800">Correct Answer</span>
+            <span id="sol-answer" class="font-bold text-emerald-950 text-sm sm:text-base"></span>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Right Column: Question Palette & Stats -->
+    <aside class="lg:col-span-4 bg-white rounded-2xl shadow-sm border border-slate-200 p-5 sticky top-20">
+      <div class="flex items-center justify-between mb-3">
+        <h2 class="text-sm font-bold text-slate-900 uppercase tracking-wider">Question Palette</h2>
+        <span id="palette-count" class="text-xs font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-lg">
+          0 / 60 Answered
+        </span>
+      </div>
+
+      <!-- Progress Bar -->
+      <div class="w-full h-2 bg-slate-100 rounded-full overflow-hidden mb-4">
+        <div id="progress-bar" class="h-full bg-emerald-600 transition-all duration-300" style="width: 0%;"></div>
+      </div>
+
+      <!-- Legend -->
+      <div class="grid grid-cols-2 gap-2 text-xs text-slate-600 mb-4 pb-3 border-b border-slate-100">
+        <div class="flex items-center gap-1.5">
+          <span class="w-3 h-3 rounded bg-emerald-600 inline-block"></span> Correct / Answered
+        </div>
+        <div class="flex items-center gap-1.5">
+          <span class="w-3 h-3 rounded bg-rose-500 inline-block"></span> Incorrect (Study)
+        </div>
+        <div class="flex items-center gap-1.5">
+          <span class="w-3 h-3 rounded bg-amber-400 inline-block"></span> Marked for Review
+        </div>
+        <div class="flex items-center gap-1.5">
+          <span class="w-3 h-3 rounded bg-slate-100 border border-slate-300 inline-block"></span> Unanswered
+        </div>
+      </div>
+
+      <!-- 60-Question Grid -->
+      <div id="palette-grid" class="grid grid-cols-6 sm:grid-cols-10 lg:grid-cols-6 gap-1.5 max-h-[340px] overflow-y-auto pr-1">
+        <!-- Populated by JS -->
+      </div>
+
+      <!-- Live Score Mini Summary (Study Mode) -->
+      <div id="study-mini-stats" class="mt-4 pt-4 border-t border-slate-100 grid grid-cols-3 gap-2 text-center">
+        <div class="bg-emerald-50 rounded-xl p-2">
+          <div id="stat-correct" class="text-lg font-extrabold text-emerald-700">0</div>
+          <div class="text-[11px] font-medium text-emerald-900">Correct</div>
+        </div>
+        <div class="bg-rose-50 rounded-xl p-2">
+          <div id="stat-wrong" class="text-lg font-extrabold text-rose-700">0</div>
+          <div class="text-[11px] font-medium text-rose-900">Wrong</div>
+        </div>
+        <div class="bg-slate-100 rounded-xl p-2">
+          <div id="stat-marks" class="text-lg font-extrabold text-slate-800">0</div>
+          <div class="text-[11px] font-medium text-slate-600">Marks (/120)</div>
+        </div>
+      </div>
+    </aside>
+  </main>
+
+  <!-- Scorecard Modal -->
+  <div id="scorecard-modal" class="hidden fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto border border-slate-200">
+      <div class="px-6 py-4 bg-emerald-950 text-white flex items-center justify-between sticky top-0">
+        <div>
+          <h2 class="text-lg font-bold">UGC NET Performance Scorecard</h2>
+          <p class="text-xs text-emerald-200">+2 Marks per Correct Answer &bull; No Negative Marking</p>
+        </div>
+        <button onclick="closeModal('scorecard-modal')" class="text-emerald-200 hover:text-white text-xl font-bold px-2">&times;</button>
+      </div>
+      <div class="p-6 space-y-6">
+        <!-- Top Score Tiles -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
+          <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-3">
+            <div id="sc-marks" class="text-2xl font-extrabold text-emerald-800">0 / 120</div>
+            <div class="text-xs font-semibold text-emerald-700 mt-0.5">Total Marks</div>
+          </div>
+          <div class="bg-slate-50 border border-slate-200 rounded-xl p-3">
+            <div id="sc-accuracy" class="text-2xl font-extrabold text-slate-800">0%</div>
+            <div class="text-xs font-semibold text-slate-600 mt-0.5">Accuracy</div>
+          </div>
+          <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-3">
+            <div id="sc-correct" class="text-2xl font-extrabold text-emerald-700">0</div>
+            <div class="text-xs font-semibold text-emerald-700 mt-0.5">Correct</div>
+          </div>
+          <div class="bg-rose-50 border border-rose-200 rounded-xl p-3">
+            <div id="sc-wrong" class="text-2xl font-extrabold text-rose-700">0</div>
+            <div class="text-xs font-semibold text-rose-700 mt-0.5">Incorrect</div>
+          </div>
+        </div>
+
+        <!-- Topic Breakdown -->
+        <div>
+          <h3 class="text-xs font-bold uppercase tracking-wider text-slate-500 mb-3">Topic-Wise Breakdown</h3>
+          <div id="sc-topic-breakdown" class="space-y-3">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+
+        <div class="flex flex-wrap justify-end gap-2 pt-3 border-t border-slate-100">
+          <button onclick="switchToReviewFromScorecard()" class="px-4 py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-600 text-white font-semibold text-sm">
+            Review All Worked Solutions
+          </button>
+          <button onclick="closeModal('scorecard-modal')" class="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-semibold text-sm">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Formula Sheet Modal -->
+  <div id="formula-modal" class="hidden fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[88vh] overflow-y-auto border border-slate-200">
+      <div class="px-6 py-4 bg-slate-900 text-white flex items-center justify-between sticky top-0">
+        <h2 class="text-lg font-bold">High-Yield UGC NET Formula Sheet</h2>
+        <button onclick="closeModal('formula-modal')" class="text-slate-300 hover:text-white text-xl font-bold px-2">&times;</button>
+      </div>
+      <div class="p-6 grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+        <div class="bg-slate-50 border border-slate-200 rounded-xl p-4">
+          <h3 class="font-bold text-emerald-900 mb-2">1. Ecosystem Energetics</h3>
+          <ul class="space-y-1.5 text-slate-700 text-xs">
+            <li><strong>NPP:</strong> GPP &minus; R<sub>a</sub> &nbsp;|&nbsp; <strong>NEP:</strong> GPP &minus; (R<sub>a</sub> + R<sub>h</sub>)</li>
+            <li><strong>Assimilation (A):</strong> I &minus; F &nbsp;|&nbsp; <strong>NPE:</strong> (P / A) &times; 100</li>
+            <li><strong>Light/Dark Bottle GPP:</strong> (DO<sub>L</sub> &minus; DO<sub>D</sub>) / &Delta;t</li>
+            <li><strong>Residence Time (&tau;):</strong> Reservoir Size / Outflow Flux</li>
+          </ul>
+        </div>
+        <div class="bg-slate-50 border border-slate-200 rounded-xl p-4">
+          <h3 class="font-bold text-emerald-900 mb-2">2. Population &amp; Biodiversity</h3>
+          <ul class="space-y-1.5 text-slate-700 text-xs">
+            <li><strong>Logistic Growth:</strong> dN/dt = rN(1 &minus; N/K); MSY = rK/4</li>
+            <li><strong>Lincoln-Petersen:</strong> N = (M &times; C) / R</li>
+            <li><strong>Shannon Index:</strong> H&prime; = &minus;&Sigma; p<sub>i</sub> ln(p<sub>i</sub>); J&prime; = H&prime;/ln(S)</li>
+            <li><strong>Species-Area:</strong> S = cA<sup>z</sup> &nbsp;|&nbsp; <strong>N<sub>e</sub>:</strong> 4N<sub>m</sub>N<sub>f</sub> / (N<sub>m</sub> + N<sub>f</sub>)</li>
+          </ul>
+        </div>
+        <div class="bg-slate-50 border border-slate-200 rounded-xl p-4">
+          <h3 class="font-bold text-emerald-900 mb-2">3. Air Quality &amp; Dispersion</h3>
+          <ul class="space-y-1.5 text-slate-700 text-xs">
+            <li><strong>Unit Conv. (25&deg;C):</strong> &mu;g/m&sup3; = (ppm &times; M &times; 1000) / 24.45</li>
+            <li><strong>Gaussian Ground Centerline:</strong> C = [Q / (&pi;u&sigma;<sub>y</sub>&sigma;<sub>z</sub>)] exp(&minus;H&sup2;/2&sigma;<sub>z</sub>&sup2;)</li>
+            <li><strong>Box Model:</strong> C = C<sub>b</sub> + (q<sub>s</sub> &middot; L) / (u &middot; H)</li>
+            <li><strong>Wind Power Law:</strong> u<sub>2</sub> = u<sub>1</sub> (z<sub>2</sub> / z<sub>1</sub>)<sup>p</sup></li>
+          </ul>
+        </div>
+        <div class="bg-slate-50 border border-slate-200 rounded-xl p-4">
+          <h3 class="font-bold text-emerald-900 mb-2">4. Air Pollution Control</h3>
+          <ul class="space-y-1.5 text-slate-700 text-xs">
+            <li><strong>ESP (Deutsch-Anderson):</strong> &eta; = 1 &minus; exp(&minus;wA / Q)</li>
+            <li><strong>Settling Chamber:</strong> v<sub>t</sub> = Q / (W &middot; L)</li>
+            <li><strong>Series Efficiency:</strong> &eta;<sub>total</sub> = 1 &minus; (1 &minus; &eta;<sub>1</sub>)(1 &minus; &eta;<sub>2</sub>)</li>
+            <li><strong>Baghouse Area:</strong> A = Q / (A/C Ratio)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Custom Reset Confirmation Modal (No native confirm/alert) -->
+  <div id="reset-modal" class="hidden fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-xl max-w-md w-full p-6 border border-slate-200">
+      <h2 class="text-lg font-bold text-slate-900 mb-2">Reset All Progress?</h2>
+      <p class="text-sm text-slate-600 mb-6">
+        This will clear all your selected answers, review flags, and reset the 3-hour timer back to 03:00:00.
+      </p>
+      <div class="flex justify-end gap-2">
+        <button onclick="closeModal('reset-modal')" class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-semibold text-sm">
+          Cancel
+        </button>
+        <button onclick="confirmReset()" class="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-semibold text-sm">
+          Yes, Reset Exam
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Message Notification -->
+  <div id="toast-box" class="hidden fixed bottom-5 right-5 z-50 bg-slate-900 text-white text-sm font-medium px-4 py-3 rounded-xl shadow-lg border border-slate-700"></div>
+
+  <script>
+    /* =========================================================================
+       COMPLETE 60-QUESTION UGC NET ENVIRONMENTAL SCIENCE QUESTION BANK
+       7 Topics | 47 Numericals + 13 Conceptual | Full Worked-Out Solutions
+       ========================================================================= */
+    const QUESTIONS = [
+      // ==================== TOPIC 1: ECOSYSTEM STRUCTURE & FUNCTIONS (9) ====================
+      {
+        id: 1,
+        topic: "Ecosystem Structure & Functions",
+        type: "Numerical",
+        q: "In a terrestrial ecosystem, a herbivore population ingests <strong>2000 kcal m<sup>&minus;2</sup> yr<sup>&minus;1</sup></strong> of plant biomass. Of this energy, <strong>800 kcal m<sup>&minus;2</sup> yr<sup>&minus;1</sup></strong> is egested as feces and <strong>900 kcal m<sup>&minus;2</sup> yr<sup>&minus;1</sup></strong> is lost through cellular respiration. What is the Net Production Efficiency (NPE) of this herbivore population?",
+        options: ["15.0%", "25.0%", "40.0%", "60.0%"],
+        answer: 1,
+        formula: "A = I &minus; F  |  P = A &minus; R  |  NPE = (P / A) &times; 100%",
+        steps: [
+          "1. Given: Ingestion (I) = 2000 kcal m<sup>&minus;2</sup> yr<sup>&minus;1</sup>, Feces (F) = 800, Respiration (R) = 900.",
+          "2. Calculate Assimilated Energy (A): A = I &minus; F = 2000 &minus; 800 = <strong>1200 kcal m<sup>&minus;2</sup> yr<sup>&minus;1</sup></strong>.",
+          "3. Calculate Net Secondary Production (P): P = A &minus; R = 1200 &minus; 900 = <strong>300 kcal m<sup>&minus;2</sup> yr<sup>&minus;1</sup></strong>.",
+          "4. Compute NPE = (300 / 1200) &times; 100% = <strong>25.0%</strong>."
+        ]
+      },
+      {
+        id: 2,
+        topic: "Ecosystem Structure & Functions",
+        type: "Numerical",
+        q: "Solar radiation incident on a grassland is <strong>10<sup>6</sup> kcal m<sup>&minus;2</sup> yr<sup>&minus;1</sup></strong>. If producers convert <strong>1%</strong> of incident solar energy into Net Primary Productivity (NPP) and energy transfer between successive trophic levels obeys Lindeman's <strong>10% law</strong>, how much energy is available to tertiary consumers (4th trophic level)?",
+        options: ["1000 kcal m<sup>&minus;2</sup> yr<sup>&minus;1</sup>", "100 kcal m<sup>&minus;2</sup> yr<sup>&minus;1</sup>", "10 kcal m<sup>&minus;2</sup> yr<sup>&minus;1</sup>", "1 kcal m<sup>&minus;2</sup> yr<sup>&minus;1</sup>"],
+        answer: 2,
+        formula: "E<sub>n</sub> = E<sub>1</sub> &times; (0.10)<sup>n&minus;1</sup>",
+        steps: [
+          "1. Energy fixed by Producers (T1) = 1% of 10<sup>6</sup> = 0.01 &times; 10<sup>6</sup> = <strong>10,000 kcal m<sup>&minus;2</sup> yr<sup>&minus;1</sup></strong>.",
+          "2. Primary Consumers (T2) = 10% of 10,000 = <strong>1,000 kcal m<sup>&minus;2</sup> yr<sup>&minus;1</sup></strong>.",
+          "3. Secondary Consumers (T3) = 10% of 1,000 = <strong>100 kcal m<sup>&minus;2</sup> yr<sup>&minus;1</sup></strong>.",
+          "4. Tertiary Consumers (T4) = 10% of 100 = <strong>10 kcal m<sup>&minus;2</sup> yr<sup>&minus;1</sup></strong>."
+        ]
+      },
+      {
+        id: 3,
+        topic: "Ecosystem Structure & Functions",
+        type: "Numerical",
+        q: "An insect consumes <strong>500 J</strong> of leaf tissue, egests <strong>200 J</strong> as waste, and converts <strong>60 J</strong> into new biomass. What are its Assimilation Efficiency (AE) and Gross Production Efficiency (GPE), respectively?",
+        options: ["AE = 60%, GPE = 12%", "AE = 40%, GPE = 20%", "AE = 60%, GPE = 20%", "AE = 48%, GPE = 12%"],
+        answer: 0,
+        formula: "AE = [(I &minus; F) / I] &times; 100%  |  GPE = (P / I) &times; 100%",
+        steps: [
+          "1. Assimilated energy A = I &minus; F = 500 &minus; 200 = <strong>300 J</strong>.",
+          "2. Assimilation Efficiency (AE) = (300 / 500) &times; 100% = <strong>60%</strong>.",
+          "3. Gross Production Efficiency (GPE) = (P / I) &times; 100% = (60 / 500) &times; 100% = <strong>12%</strong>.",
+          "Note: NPE would be 60 / 300 = 20%, whereas GPE divides by total ingestion (I)."
+        ]
+      },
+      {
+        id: 4,
+        topic: "Ecosystem Structure & Functions",
+        type: "Numerical",
+        q: "A tropical forest exhibits a Net Primary Productivity (NPP) of <strong>1200 g C m<sup>&minus;2</sup> yr<sup>&minus;1</sup></strong>. If autotrophic respiration (R<sub>a</sub>) accounts for <strong>40%</strong> of Gross Primary Productivity (GPP), what is the GPP of this forest?",
+        options: ["1680 g C m<sup>&minus;2</sup> yr<sup>&minus;1</sup>", "2000 g C m<sup>&minus;2</sup> yr<sup>&minus;1</sup>", "2400 g C m<sup>&minus;2</sup> yr<sup>&minus;1</sup>", "3000 g C m<sup>&minus;2</sup> yr<sup>&minus;1</sup>"],
+        answer: 1,
+        formula: "NPP = GPP &minus; R<sub>a</sub>",
+        steps: [
+          "1. Given: R<sub>a</sub> = 0.40 &times; GPP.",
+          "2. Substitute into NPP equation: NPP = GPP &minus; 0.40 GPP = <strong>0.60 GPP</strong>.",
+          "3. Solve for GPP: GPP = NPP / 0.60 = 1200 / 0.60 = <strong>2000 g C m<sup>&minus;2</sup> yr<sup>&minus;1</sup></strong>."
+        ]
+      },
+      {
+        id: 5,
+        topic: "Ecosystem Structure & Functions",
+        type: "Numerical",
+        q: "In a Light-and-Dark Bottle experiment conducted in a freshwater lake for <strong>4 hours</strong>, the initial dissolved oxygen (DO) is <strong>8.0 mg L<sup>&minus;1</sup></strong>. After incubation, the Light bottle DO rises to <strong>11.5 mg L<sup>&minus;1</sup></strong> and the Dark bottle DO falls to <strong>6.0 mg L<sup>&minus;1</sup></strong>. Calculate the Gross Primary Productivity (GPP) in mg O<sub>2</sub> L<sup>&minus;1</sup> hr<sup>&minus;1</sup>.",
+        options: ["0.875 mg O<sub>2</sub> L<sup>&minus;1</sup> hr<sup>&minus;1</sup>", "1.125 mg O<sub>2</sub> L<sup>&minus;1</sup> hr<sup>&minus;1</sup>", "1.375 mg O<sub>2</sub> L<sup>&minus;1</sup> hr<sup>&minus;1</sup>", "2.875 mg O<sub>2</sub> L<sup>&minus;1</sup> hr<sup>&minus;1</sup>"],
+        answer: 2,
+        formula: "GPP = (DO<sub>Light</sub> &minus; DO<sub>Dark</sub>) / &Delta;t",
+        steps: [
+          "1. Net Primary Production (NPP) over 4 hr = DO<sub>Light</sub> &minus; DO<sub>Initial</sub> = 11.5 &minus; 8.0 = 3.5 mg L<sup>&minus;1</sup>.",
+          "2. Community Respiration (R) over 4 hr = DO<sub>Initial</sub> &minus; DO<sub>Dark</sub> = 8.0 &minus; 6.0 = 2.0 mg L<sup>&minus;1</sup>.",
+          "3. GPP over 4 hr = NPP + R = DO<sub>Light</sub> &minus; DO<sub>Dark</sub> = 11.5 &minus; 6.0 = <strong>5.5 mg L<sup>&minus;1</sup></strong>.",
+          "4. Hourly GPP rate = 5.5 / 4 = <strong>1.375 mg O<sub>2</sub> L<sup>&minus;1</sup> hr<sup>&minus;1</sup></strong>."
+        ]
+      },
+      {
+        id: 6,
+        topic: "Ecosystem Structure & Functions",
+        type: "Numerical",
+        q: "At steady state, the atmospheric carbon reservoir contains <strong>840 Gt C</strong>, and the combined annual removal flux by terrestrial photosynthesis and ocean uptake is <strong>210 Gt C yr<sup>&minus;1</sup></strong>. What is the mean residence time (&tau;) of carbon in the atmosphere?",
+        options: ["2.5 years", "4.0 years", "6.2 years", "10.0 years"],
+        answer: 1,
+        formula: "&tau; = Reservoir Mass (M) / Total Outflow Flux (F<sub>out</sub>)",
+        steps: [
+          "1. Given: M = 840 Gt C, F<sub>out</sub> = 210 Gt C yr<sup>&minus;1</sup>.",
+          "2. Apply steady-state residence time formula: &tau; = 840 / 210 = <strong>4.0 years</strong>."
+        ]
+      },
+      {
+        id: 7,
+        topic: "Ecosystem Structure & Functions",
+        type: "Numerical",
+        q: "Lake water contains a persistent organochlorine pesticide at <strong>0.002 ppm</strong>. If the bioconcentration factor from water to zooplankton is <strong>500&times;</strong>, and biomagnification factors are <strong>10&times;</strong> (zooplankton &rarr; small fish) and <strong>20&times;</strong> (small fish &rarr; osprey), what is the expected concentration in osprey tissues?",
+        options: ["20 ppm", "100 ppm", "200 ppm", "400 ppm"],
+        answer: 2,
+        formula: "C<sub>final</sub> = C<sub>water</sub> &times; BCF &times; BMF<sub>1</sub> &times; BMF<sub>2</sub>",
+        steps: [
+          "1. Zooplankton concentration = 0.002 &times; 500 = <strong>1.0 ppm</strong>.",
+          "2. Small fish concentration = 1.0 &times; 10 = <strong>10.0 ppm</strong>.",
+          "3. Osprey concentration = 10.0 &times; 20 = <strong>200 ppm</strong>."
+        ]
+      },
+      {
+        id: 8,
+        topic: "Ecosystem Structure & Functions",
+        type: "Conceptual",
+        q: "Why can the ecological <strong>pyramid of biomass</strong> be inverted in open-ocean ecosystems, whereas the <strong>pyramid of energy</strong> is strictly upright in all ecosystems?",
+        options: [
+          "Phytoplankton have a very rapid turnover rate and short lifespan, while energy flow always suffers thermodynamic heat loss at each trophic transfer.",
+          "Zooplankton photosynthesize at night, creating extra biomass without requiring solar energy.",
+          "Marine ecosystems violate Lindeman's 10% law due to high water density.",
+          "Biomass pyramids include decomposers at the top trophic level."
+        ],
+        answer: 0,
+        formula: "Second Law of Thermodynamics &amp; Biomass Turnover (P/B Ratio)",
+        steps: [
+          "1. In open oceans, phytoplankton have a tiny standing crop biomass at any instant, but reproduce so rapidly (very high P/B ratio) that they support a larger standing biomass of longer-lived zooplankton.",
+          "2. However, energy flow is measured per unit time (kcal m<sup>&minus;2</sup> yr<sup>&minus;1</sup>) and is governed by the Second Law of Thermodynamics: energy is always dissipated as heat at every trophic step, so the energy pyramid can never be inverted."
+        ]
+      },
+      {
+        id: 9,
+        topic: "Ecosystem Structure & Functions",
+        type: "Conceptual",
+        q: "In the biogeochemical nitrogen cycle, which sequence correctly matches the bacterial genera to <strong>ammonia oxidation</strong>, <strong>nitrite oxidation</strong>, and <strong>denitrification</strong>?",
+        options: [
+          "Nitrobacter &rarr; Nitrosomonas &rarr; Rhizobium",
+          "Nitrosomonas &rarr; Nitrobacter &rarr; Pseudomonas",
+          "Azotobacter &rarr; Nitrosomonas &rarr; Nitrobacter",
+          "Pseudomonas &rarr; Azotobacter &rarr; Nitrobacter"
+        ],
+        answer: 1,
+        formula: "NH<sub>4</sub><sup>+</sup> &rarr; NO<sub>2</sub><sup>&minus;</sup> &rarr; NO<sub>3</sub><sup>&minus;</sup> &rarr; N<sub>2</sub>",
+        steps: [
+          "1. <strong>Nitrosomonas</strong> oxidizes ammonium (NH<sub>4</sub><sup>+</sup>) to nitrite (NO<sub>2</sub><sup>&minus;</sup>).",
+          "2. <strong>Nitrobacter</strong> oxidizes nitrite (NO<sub>2</sub><sup>&minus;</sup>) to nitrate (NO<sub>3</sub><sup>&minus;</sup>).",
+          "3. <strong>Pseudomonas</strong> (and <em>Paracoccus</em>) performs anaerobic denitrification, reducing NO<sub>3</sub><sup>&minus;</sup> back to N<sub>2</sub> gas."
+        ]
+      },
+
+      // ==================== TOPIC 2: ECOLOGICAL DYNAMICS (8) ====================
+      {
+        id: 10,
+        topic: "Ecological Dynamics",
+        type: "Conceptual",
+        q: "According to E.P. Odum's classical trends in autogenic ecological succession, how do the <strong>P/R ratio</strong> (Gross Production to Community Respiration) and <strong>Net Ecosystem Production (NEP)</strong> change from an early developmental stage to a mature climax forest?",
+        options: [
+          "P/R increases well above 1 and NEP increases exponentially.",
+          "P/R decreases toward 1 and NEP approaches 0.",
+          "P/R drops below 0.1 and NEP becomes strongly positive.",
+          "Both P/R and NEP remain constant throughout all seral stages."
+        ],
+        answer: 1,
+        formula: "Mature Climax State: P / R &rarr; 1  and  NEP = GPP &minus; R<sub>total</sub> &rarr; 0",
+        steps: [
+          "1. In early autotrophic succession, GPP exceeds total community respiration (P/R > 1), resulting in positive NEP and rapid biomass accumulation.",
+          "2. As the ecosystem matures into a climax state, supporting tissues and heterotrophic biomass increase respiration until R &approx; P, driving P/R &rarr; 1 and NEP &rarr; 0."
+        ]
+      },
+      {
+        id: 11,
+        topic: "Ecological Dynamics",
+        type: "Numerical",
+        q: "A regenerating temperate woodland records <strong>GPP = 2800 g C m<sup>&minus;2</sup> yr<sup>&minus;1</sup></strong>, autotrophic respiration <strong>R<sub>a</sub> = 1100 g C m<sup>&minus;2</sup> yr<sup>&minus;1</sup></strong>, and heterotrophic respiration <strong>R<sub>h</sub> = 1300 g C m<sup>&minus;2</sup> yr<sup>&minus;1</sup></strong>. Calculate its Net Ecosystem Production (NEP) and P/R ratio.",
+        options: [
+          "NEP = 400 g C m<sup>&minus;2</sup> yr<sup>&minus;1</sup>; P/R = 1.17",
+          "NEP = 1700 g C m<sup>&minus;2</sup> yr<sup>&minus;1</sup>; P/R = 2.55",
+          "NEP = &minus;400 g C m<sup>&minus;2</sup> yr<sup>&minus;1</sup>; P/R = 0.86",
+          "NEP = 200 g C m<sup>&minus;2</sup> yr<sup>&minus;1</sup>; P/R = 1.08"
+        ],
+        answer: 0,
+        formula: "NEP = GPP &minus; (R<sub>a</sub> + R<sub>h</sub>)  |  P/R = GPP / (R<sub>a</sub> + R<sub>h</sub>)",
+        steps: [
+          "1. Total ecosystem respiration R<sub>total</sub> = R<sub>a</sub> + R<sub>h</sub> = 1100 + 1300 = <strong>2400 g C m<sup>&minus;2</sup> yr<sup>&minus;1</sup></strong>.",
+          "2. NEP = 2800 &minus; 2400 = <strong>400 g C m<sup>&minus;2</sup> yr<sup>&minus;1</sup></strong> (net carbon sink).",
+          "3. P/R ratio = 2800 / 2400 = <strong>1.17</strong> (indicative of an active mid-seral autotrophic stage)."
+        ]
+      },
+      {
+        id: 12,
+        topic: "Ecological Dynamics",
+        type: "Numerical",
+        q: "On a forest floor at steady state, the standing crop of leaf litter is <strong>12 tonnes ha<sup>&minus;1</sup></strong> and the annual litterfall input is <strong>4 tonnes ha<sup>&minus;1</sup> yr<sup>&minus;1</sup></strong>. Find the decomposition rate constant (<em>k</em>) and litter turnover time (<em>T</em>).",
+        options: [
+          "k = 0.25 yr<sup>&minus;1</sup>, T = 4.0 years",
+          "k = 0.33 yr<sup>&minus;1</sup>, T = 3.0 years",
+          "k = 3.00 yr<sup>&minus;1</sup>, T = 0.33 years",
+          "k = 0.50 yr<sup>&minus;1</sup>, T = 2.0 years"
+        ],
+        answer: 1,
+        formula: "Olson's Model (Steady State): k = L / X<sub>ss</sub>  |  T = 1 / k",
+        steps: [
+          "1. Given: Annual litterfall L = 4 t ha<sup>&minus;1</sup> yr<sup>&minus;1</sup>, Standing crop X<sub>ss</sub> = 12 t ha<sup>&minus;1</sup>.",
+          "2. Decomposition constant k = 4 / 12 = <strong>0.333 yr<sup>&minus;1</sup></strong>.",
+          "3. Mean turnover time T = 1 / k = 12 / 4 = <strong>3.0 years</strong>."
+        ]
+      },
+      {
+        id: 13,
+        topic: "Ecological Dynamics",
+        type: "Numerical",
+        q: "Litter decomposition follows first-order exponential decay: <strong>M<sub>t</sub> = M<sub>0</sub> e<sup>&minus;kt</sup></strong>. If an initial litter bag contains <strong>800 g</strong> of dry leaves and the decay constant is <strong>k = 0.693 yr<sup>&minus;1</sup></strong>, what mass of litter remains after <strong>2 years</strong>?",
+        options: ["400 g", "200 g", "100 g", "50 g"],
+        answer: 1,
+        formula: "M<sub>t</sub> = M<sub>0</sub> e<sup>&minus;kt</sup>  (Note: e<sup>&minus;0.693</sup> = 0.5)",
+        steps: [
+          "1. Given: M<sub>0</sub> = 800 g, k = 0.693 yr<sup>&minus;1</sup> = ln(2), t = 2 yr.",
+          "2. Exponent: &minus;kt = &minus;2 &times; ln(2) = ln(1/4).",
+          "3. Remaining mass M<sub>2</sub> = 800 &times; (0.5)<sup>2</sup> = 800 &times; 0.25 = <strong>200 g</strong>."
+        ]
+      },
+      {
+        id: 14,
+        topic: "Ecological Dynamics",
+        type: "Numerical",
+        q: "A wildfire removes <strong>60%</strong> of the aboveground biomass of a woodland. Over the next <strong>15 years</strong>, the ecosystem recovers <strong>75% of the lost biomass</strong>. What is the average linear resilience rate (percentage of original pre-fire biomass recovered per year)?",
+        options: ["2.0% yr<sup>&minus;1</sup>", "3.0% yr<sup>&minus;1</sup>", "4.0% yr<sup>&minus;1</sup>", "5.0% yr<sup>&minus;1</sup>"],
+        answer: 1,
+        formula: "Resilience Rate = (% Original Biomass Recovered) / Recovery Time",
+        steps: [
+          "1. Lost biomass = 60% of original biomass.",
+          "2. Biomass recovered in 15 years = 75% of 60% = 0.75 &times; 60% = <strong>45%</strong> of original biomass.",
+          "3. Linear resilience rate = 45% / 15 yr = <strong>3.0% yr<sup>&minus;1</sup></strong>."
+        ]
+      },
+      {
+        id: 15,
+        topic: "Ecological Dynamics",
+        type: "Conceptual",
+        q: "In Connell and Slatyer's (1977) mechanisms of ecological succession, which model states that early pioneer species modify the environment in a way that makes it <strong>less suitable</strong> for later species, so succession proceeds only when early species die or are damaged?",
+        options: [
+          "Facilitation model",
+          "Tolerance model",
+          "Inhibition model",
+          "Relay floristics model"
+        ],
+        answer: 2,
+        formula: "Connell &amp; Slatyer (1977): Facilitation vs. Tolerance vs. Inhibition",
+        steps: [
+          "1. <strong>Facilitation:</strong> Early species ameliorate harsh conditions, aiding later arrivals (common in primary succession).",
+          "2. <strong>Tolerance:</strong> Later species establish regardless of early species and outcompete them for resources.",
+          "3. <strong>Inhibition:</strong> Early colonists resist invasion (e.g., via allelopathy or space preemption) until disturbance or mortality removes them."
+        ]
+      },
+      {
+        id: 16,
+        topic: "Ecological Dynamics",
+        type: "Conceptual",
+        q: "Which sequence correctly represents the seral stages of <strong>hydrarch succession</strong> in a freshwater pond?",
+        options: [
+          "Phytoplankton &rarr; Rooted submerged &rarr; Free-floating &rarr; Reed-swamp &rarr; Marsh-meadow &rarr; Scrub &rarr; Forest",
+          "Phytoplankton &rarr; Reed-swamp &rarr; Rooted submerged &rarr; Scrub &rarr; Forest",
+          "Lichens &rarr; Mosses &rarr; Reed-swamp &rarr; Marsh-meadow &rarr; Forest",
+          "Free-floating &rarr; Phytoplankton &rarr; Marsh-meadow &rarr; Rooted submerged &rarr; Forest"
+        ],
+        answer: 0,
+        formula: "Hydrosere Progression: Open Water &rarr; Mesic Climax Forest",
+        steps: [
+          "1. Hydrarch succession begins with planktonic pioneers in open water, gradually filling the basin with organic sediment.",
+          "2. As water shallows, rooted submerged plants give way to floating plants, then emergent reed-swamps, sedge/marsh-meadows, woody shrubs (scrub), and finally a mesic climax forest."
+        ]
+      },
+      {
+        id: 17,
+        topic: "Ecological Dynamics",
+        type: "Conceptual",
+        q: "The collapse of Pacific kelp forests into 'urchin barrens' following the overhunting of sea otters is a classic textbook example of:",
+        options: [
+          "Bottom-up nutrient limitation",
+          "Top-down trophic cascade and ecological regime shift",
+          "Competitive exclusion between primary producers",
+          "Primary autogenic succession"
+        ],
+        answer: 1,
+        formula: "Keystone Predator Removal &rarr; Mesopredator/Herbivore Release &rarr; Producer Collapse",
+        steps: [
+          "1. Sea otters are keystone predators that keep sea urchin populations in check.",
+          "2. Removing otters releases urchins from top-down control; urchins overgraze kelp, shifting the ecosystem into an alternative stable state (urchin barren)."
+        ]
+      },
+
+      // ==================== TOPIC 3: POPULATION & COMMUNITY ECOLOGY (9) ====================
+      {
+        id: 18,
+        topic: "Population & Community Ecology",
+        type: "Numerical",
+        q: "A deer population follows the Verhulst-Pearl logistic growth model with an intrinsic rate of increase <strong>r = 0.4 yr<sup>&minus;1</sup></strong> and carrying capacity <strong>K = 1000</strong>. What is the instantaneous population growth rate (<strong>dN/dt</strong>) when <strong>N = 250</strong>?",
+        options: ["50 individuals yr<sup>&minus;1</sup>", "75 individuals yr<sup>&minus;1</sup>", "100 individuals yr<sup>&minus;1</sup>", "125 individuals yr<sup>&minus;1</sup>"],
+        answer: 1,
+        formula: "dN / dt = rN (1 &minus; N / K)",
+        steps: [
+          "1. Substitute r = 0.4, N = 250, K = 1000 into the logistic equation.",
+          "2. Environmental resistance term: (1 &minus; 250 / 1000) = 1 &minus; 0.25 = <strong>0.75</strong>.",
+          "3. dN/dt = 0.4 &times; 250 &times; 0.75 = 100 &times; 0.75 = <strong>75 individuals yr<sup>&minus;1</sup></strong>."
+        ]
+      },
+      {
+        id: 19,
+        topic: "Population & Community Ecology",
+        type: "Numerical",
+        q: "A commercial fishery obeys logistic growth with <strong>r = 0.5 yr<sup>&minus;1</sup></strong> and carrying capacity <strong>K = 2000 tonnes</strong>. What are the population biomass at Maximum Sustainable Yield (<strong>N<sub>MSY</sub></strong>) and the <strong>MSY</strong> harvest rate?",
+        options: [
+          "N<sub>MSY</sub> = 1000 t; MSY = 250 t yr<sup>&minus;1</sup>",
+          "N<sub>MSY</sub> = 1000 t; MSY = 500 t yr<sup>&minus;1</sup>",
+          "N<sub>MSY</sub> = 500 t; MSY = 250 t yr<sup>&minus;1</sup>",
+          "N<sub>MSY</sub> = 1500 t; MSY = 187.5 t yr<sup>&minus;1</sup>"
+        ],
+        answer: 0,
+        formula: "N<sub>MSY</sub> = K / 2  |  MSY = (r &middot; K) / 4",
+        steps: [
+          "1. In logistic growth, the inflection point (maximum growth rate) occurs at N<sub>MSY</sub> = K / 2 = 2000 / 2 = <strong>1000 tonnes</strong>.",
+          "2. Maximum Sustainable Yield = rK / 4 = (0.5 &times; 2000) / 4 = 1000 / 4 = <strong>250 tonnes yr<sup>&minus;1</sup></strong>."
+        ]
+      },
+      {
+        id: 20,
+        topic: "Population & Community Ecology",
+        type: "Numerical",
+        q: "An exponentially growing invasive plant population increases from <strong>500</strong> to <strong>2000</strong> individuals in <strong>14 years</strong>. Given <strong>ln(2) &approx; 0.693</strong>, what are its doubling time (<strong>t<sub>d</sub></strong>) and intrinsic rate of increase (<strong>r</strong>)?",
+        options: [
+          "t<sub>d</sub> = 7.0 yr; r = 0.099 yr<sup>&minus;1</sup>",
+          "t<sub>d</sub> = 3.5 yr; r = 0.198 yr<sup>&minus;1</sup>",
+          "t<sub>d</sub> = 14.0 yr; r = 0.050 yr<sup>&minus;1</sup>",
+          "t<sub>d</sub> = 7.0 yr; r = 0.143 yr<sup>&minus;1</sup>"
+        ],
+        answer: 0,
+        formula: "N<sub>t</sub> = N<sub>0</sub> e<sup>rt</sup>  |  t<sub>d</sub> = ln(2) / r",
+        steps: [
+          "1. Growth from 500 &rarr; 1000 &rarr; 2000 represents exactly <strong>2 doublings</strong> in 14 years.",
+          "2. Therefore, doubling time t<sub>d</sub> = 14 / 2 = <strong>7.0 years</strong>.",
+          "3. Intrinsic rate of increase r = ln(2) / t<sub>d</sub> = 0.693 / 7.0 = <strong>0.099 yr<sup>&minus;1</sup></strong>."
+        ]
+      },
+      {
+        id: 21,
+        topic: "Population & Community Ecology",
+        type: "Numerical",
+        q: "Ecologists capture, mark, and release <strong>80 fish</strong> in a reservoir. One week later, a second catch of <strong>120 fish</strong> contains <strong>16 marked</strong> individuals. Using the Lincoln-Petersen estimator, what is the estimated total fish population?",
+        options: ["480", "600", "720", "960"],
+        answer: 1,
+        formula: "N = (M &times; C) / R",
+        steps: [
+          "1. Given: Marked in first sample (M) = 80, Total in second sample (C) = 120, Recaptured marked (R) = 16.",
+          "2. N = (80 &times; 120) / 16 = 9600 / 16 = <strong>600 fish</strong>."
+        ]
+      },
+      {
+        id: 22,
+        topic: "Population & Community Ecology",
+        type: "Numerical",
+        q: "A cohort life table for a perennial herb shows three age classes (x = 0, 1, 2) with age-specific survivorship <strong>l<sub>x</sub> = 1.0, 0.5, 0.2</strong> and fecundity <strong>m<sub>x</sub> = 0, 2.0, 3.0</strong>. Calculate the Net Reproductive Rate (<strong>R<sub>0</sub></strong>).",
+        options: ["1.0", "1.4", "1.6", "2.5"],
+        answer: 2,
+        formula: "R<sub>0</sub> = &Sigma; (l<sub>x</sub> &middot; m<sub>x</sub>)",
+        steps: [
+          "1. Age x = 0: l<sub>0</sub>m<sub>0</sub> = 1.0 &times; 0 = 0.",
+          "2. Age x = 1: l<sub>1</sub>m<sub>1</sub> = 0.5 &times; 2.0 = 1.0.",
+          "3. Age x = 2: l<sub>2</sub>m<sub>2</sub> = 0.2 &times; 3.0 = 0.6.",
+          "4. Sum: R<sub>0</sub> = 0 + 1.0 + 0.6 = <strong>1.6</strong> (since R<sub>0</sub> > 1, the population is growing)."
+        ]
+      },
+      {
+        id: 23,
+        topic: "Population & Community Ecology",
+        type: "Numerical",
+        q: "In a Lotka-Volterra interspecific competition model, Species 1 has <strong>K<sub>1</sub> = 500</strong> and competition coefficient <strong>&alpha;<sub>12</sub> = 2.0</strong>. When <strong>N<sub>1</sub> = 100</strong>, at what population size of Species 2 (<strong>N<sub>2</sub></strong>) will Species 1's net growth rate become zero (zero-growth isocline)?",
+        options: ["150", "200", "250", "400"],
+        answer: 1,
+        formula: "dN<sub>1</sub>/dt = 0  &rArr;  N<sub>1</sub> + &alpha;<sub>12</sub>N<sub>2</sub> = K<sub>1</sub>",
+        steps: [
+          "1. Set the logistic competition term to zero: K<sub>1</sub> &minus; N<sub>1</sub> &minus; &alpha;<sub>12</sub>N<sub>2</sub> = 0.",
+          "2. Substitute K<sub>1</sub> = 500, N<sub>1</sub> = 100, &alpha;<sub>12</sub> = 2.0: 500 &minus; 100 &minus; 2.0 N<sub>2</sub> = 0.",
+          "3. 2.0 N<sub>2</sub> = 400 &rArr; N<sub>2</sub> = <strong>200 individuals</strong>."
+        ]
+      },
+      {
+        id: 24,
+        topic: "Population & Community Ecology",
+        type: "Numerical",
+        q: "A mammal population has a Net Reproductive Rate <strong>R<sub>0</sub> = e<sup>1.5</sup> (&approx; 4.48)</strong> and a mean generation time <strong>T = 3.0 years</strong>. Estimate its intrinsic rate of natural increase (<strong>r</strong>).",
+        options: ["0.25 yr<sup>&minus;1</sup>", "0.50 yr<sup>&minus;1</sup>", "0.75 yr<sup>&minus;1</sup>", "1.50 yr<sup>&minus;1</sup>"],
+        answer: 1,
+        formula: "r &approx; ln(R<sub>0</sub>) / T",
+        steps: [
+          "1. Take natural log of R<sub>0</sub>: ln(e<sup>1.5</sup>) = <strong>1.5</strong>.",
+          "2. Divide by generation time T = 3.0 yr: r = 1.5 / 3.0 = <strong>0.50 yr<sup>&minus;1</sup></strong>."
+        ]
+      },
+      {
+        id: 25,
+        topic: "Population & Community Ecology",
+        type: "Numerical",
+        q: "A vegetation survey uses <strong>10 quadrats</strong>, each measuring <strong>2 m &times; 2 m</strong>. Species A is recorded in <strong>7 quadrats</strong> with a combined total of <strong>56 individuals</strong>. What are its Density (individuals m<sup>&minus;2</sup>) and Frequency (%)?",
+        options: [
+          "Density = 1.4 ind m<sup>&minus;2</sup>; Frequency = 70%",
+          "Density = 5.6 ind m<sup>&minus;2</sup>; Frequency = 70%",
+          "Density = 2.0 ind m<sup>&minus;2</sup>; Frequency = 56%",
+          "Density = 1.4 ind m<sup>&minus;2</sup>; Frequency = 80%"
+        ],
+        answer: 0,
+        formula: "Density = Total Individuals / Total Area Sampled  |  Freq = (Occupied / Total Quadrats) &times; 100%",
+        steps: [
+          "1. Area of 1 quadrat = 2 m &times; 2 m = 4 m<sup>2</sup>; Total area = 10 &times; 4 = <strong>40 m<sup>2</sup></strong>.",
+          "2. Density = 56 / 40 = <strong>1.4 individuals m<sup>&minus;2</sup></strong>.",
+          "3. Frequency = (7 / 10) &times; 100% = <strong>70%</strong>."
+        ]
+      },
+      {
+        id: 26,
+        topic: "Population & Community Ecology",
+        type: "Conceptual",
+        q: "Which combination accurately describes a <strong>Type III survivorship curve</strong> and its associated life-history strategy?",
+        options: [
+          "High early juvenile mortality, high fecundity, minimal parental care, typically r-selected (e.g., oysters, marine fish).",
+          "Low early mortality, high survival until old age, intensive parental care, typically K-selected (e.g., elephants, humans).",
+          "Constant mortality rate across all age classes (e.g., songbirds, lizards).",
+          "Zero mortality until carrying capacity K is exceeded."
+        ],
+        answer: 0,
+        formula: "Survivorship Types: I (Convex/K), II (Diagonal/Constant), III (Concave/r)",
+        steps: [
+          "1. Type III curves drop steeply at young ages (massive juvenile mortality) with a few survivors living long lives.",
+          "2. Organisms exhibiting Type III curves invest energy in producing huge numbers of small offspring with little parental care (r-selected strategy)."
+        ]
+      },
+
+      // ==================== TOPIC 4: BIODIVERSITY & CONSERVATION (8) ====================
+      {
+        id: 27,
+        topic: "Biodiversity & Conservation",
+        type: "Numerical",
+        q: "A grassland plot contains four plant species with relative abundances <strong>p<sub>1</sub> = 0.500, p<sub>2</sub> = 0.250, p<sub>3</sub> = 0.125, p<sub>4</sub> = 0.125</strong>. Given <strong>ln(2) &approx; 0.693</strong>, calculate the Shannon-Wiener diversity index (<strong>H&prime;</strong>).",
+        options: ["0.866", "1.040", "1.213", "1.386"],
+        answer: 2,
+        formula: "H&prime; = &minus;&Sigma; p<sub>i</sub> ln(p<sub>i</sub>)",
+        steps: [
+          "1. Express probabilities as powers of 2: 0.5 = 2<sup>&minus;1</sup>, 0.25 = 2<sup>&minus;2</sup>, 0.125 = 2<sup>&minus;3</sup>.",
+          "2. &minus;p<sub>1</sub> ln(p<sub>1</sub>) = 0.5 &times; 1 &times; ln(2) = 0.50 ln(2).",
+          "3. &minus;p<sub>2</sub> ln(p<sub>2</sub>) = 0.25 &times; 2 &times; ln(2) = 0.50 ln(2).",
+          "4. &minus;p<sub>3</sub> ln(p<sub>3</sub>) &minus; p<sub>4</sub> ln(p<sub>4</sub>) = 2 &times; [0.125 &times; 3 &times; ln(2)] = 0.75 ln(2).",
+          "5. Total H&prime; = (0.50 + 0.50 + 0.75) &times; 0.693 = 1.75 &times; 0.693 = <strong>1.213</strong>."
+        ]
+      },
+      {
+        id: 28,
+        topic: "Biodiversity & Conservation",
+        type: "Numerical",
+        q: "For the 4-species grassland community in the previous problem (<strong>S = 4, H&prime; = 1.213</strong>), given <strong>ln(4) = 1.386</strong>, calculate Pielou's Evenness Index (<strong>J&prime;</strong>).",
+        options: ["0.625", "0.750", "0.875", "1.000"],
+        answer: 2,
+        formula: "J&prime; = H&prime; / H<sub>max</sub> = H&prime; / ln(S)",
+        steps: [
+          "1. Maximum possible diversity for S = 4 species is H<sub>max</sub> = ln(4) = 1.386.",
+          "2. Pielou's Evenness J&prime; = 1.213 / 1.386 = <strong>0.875</strong> (closer to 1 means relatively even)."
+        ]
+      },
+      {
+        id: 29,
+        topic: "Biodiversity & Conservation",
+        type: "Numerical",
+        q: "A wetland bird count records three species with abundances of <strong>50, 30, and 20</strong> individuals (N = 100). Calculate Simpson's Index of Diversity (<strong>1 &minus; D</strong>) using the infinite-population form D = &Sigma; p<sub>i</sub><sup>2</sup>.",
+        options: ["0.38", "0.52", "0.62", "0.74"],
+        answer: 2,
+        formula: "D = &Sigma; p<sub>i</sub><sup>2</sup>  |  Simpson's Index of Diversity = 1 &minus; D",
+        steps: [
+          "1. Relative abundances: p<sub>1</sub> = 0.50, p<sub>2</sub> = 0.30, p<sub>3</sub> = 0.20.",
+          "2. Dominance index D = (0.50)<sup>2</sup> + (0.30)<sup>2</sup> + (0.20)<sup>2</sup> = 0.25 + 0.09 + 0.04 = <strong>0.38</strong>.",
+          "3. Simpson's Index of Diversity = 1 &minus; D = 1 &minus; 0.38 = <strong>0.62</strong>."
+        ]
+      },
+      {
+        id: 30,
+        topic: "Biodiversity & Conservation",
+        type: "Numerical",
+        q: "Forest Site A contains <strong>20 species</strong>, Forest Site B contains <strong>25 species</strong>, and <strong>10 species</strong> are common to both sites. Calculate the Jaccard Similarity Index (<strong>J</strong>) between the two sites.",
+        options: ["0.222", "0.286", "0.400", "0.444"],
+        answer: 1,
+        formula: "J = c / (a + b &minus; c)",
+        steps: [
+          "1. Given: Total in A (a) = 20, Total in B (b) = 25, Shared species (c) = 10.",
+          "2. Union of unique species = 20 + 25 &minus; 10 = <strong>35</strong>.",
+          "3. Jaccard Index J = 10 / 35 = <strong>0.286</strong> (Note: Sorensen Index would be 2c/(a+b) = 20/45 = 0.444)."
+        ]
+      },
+      {
+        id: 31,
+        topic: "Biodiversity & Conservation",
+        type: "Numerical",
+        q: "According to the Arrhenius species-area relationship <strong>S = cA<sup>z</sup></strong> with <strong>z = 0.25</strong>, if deforestation reduces a tropical island's habitat area to <strong>1/16</strong> of its original size, what percentage of its original species richness is predicted to remain at equilibrium?",
+        options: ["25%", "50%", "75%", "87.5%"],
+        answer: 1,
+        formula: "S<sub>2</sub> / S<sub>1</sub> = (A<sub>2</sub> / A<sub>1</sub>)<sup>z</sup>",
+        steps: [
+          "1. Area ratio A<sub>2</sub> / A<sub>1</sub> = 1/16 = 2<sup>&minus;4</sup>.",
+          "2. Species ratio S<sub>2</sub> / S<sub>1</sub> = (2<sup>&minus;4</sup>)<sup>0.25</sup> = 2<sup>&minus;1</sup> = <strong>0.50</strong>.",
+          "3. Thus, <strong>50%</strong> of species are retained (and 50% are committed to extinction)."
+        ]
+      },
+      {
+        id: 32,
+        topic: "Biodiversity & Conservation",
+        type: "Numerical",
+        q: "An endangered tiger conservation reserve has a breeding population consisting of <strong>20 adult males</strong> and <strong>80 adult females</strong>. Calculate the genetically Effective Population Size (<strong>N<sub>e</sub></strong>).",
+        options: ["50", "64", "80", "100"],
+        answer: 1,
+        formula: "N<sub>e</sub> = (4 &middot; N<sub>m</sub> &middot; N<sub>f</sub>) / (N<sub>m</sub> + N<sub>f</sub>)",
+        steps: [
+          "1. Given: N<sub>m</sub> = 20, N<sub>f</sub> = 80 (Total census size N = 100).",
+          "2. N<sub>e</sub> = (4 &times; 20 &times; 80) / (20 + 80) = 6400 / 100 = <strong>64</strong>.",
+          "3. Skewed sex ratios always reduce N<sub>e</sub> below the census size N."
+        ]
+      },
+      {
+        id: 33,
+        topic: "Biodiversity & Conservation",
+        type: "Conceptual",
+        q: "To qualify as a global <strong>Biodiversity Hotspot</strong> under Norman Myers' criteria, a region must contain at least:",
+        options: [
+          "1,500 endemic vascular plant species and have lost at least 70% of its original primary vegetation.",
+          "500 endemic mammal species and have lost at least 50% of its forest cover.",
+          "1,000 endemic bird species and be located entirely within the tropics.",
+          "2,500 total plant species regardless of endemism or habitat loss."
+        ],
+        answer: 0,
+        formula: "Myers Hotspot Criteria: &ge; 1,500 Endemic Vascular Plants + &ge; 70% Habitat Loss",
+        steps: [
+          "1. Both strict thresholds must be met: high irreplaceability (&ge; 1,500 endemic vascular plants, i.e., 0.5% of world total) and high threat (&le; 30% original habitat remaining).",
+          "2. India encompasses 4 global hotspots: Western Ghats &amp; Sri Lanka, Eastern Himalayas, Indo-Burma, and Sundaland (Nicobar Islands)."
+        ]
+      },
+      {
+        id: 34,
+        topic: "Biodiversity & Conservation",
+        type: "Conceptual",
+        q: "Which of the following pairs correctly distinguishes <strong>In-situ</strong> from <strong>Ex-situ</strong> biodiversity conservation?",
+        options: [
+          "In-situ: Biosphere Reserves &amp; Sacred Groves | Ex-situ: Cryopreservation &amp; Seed Banks",
+          "In-situ: Botanical Gardens &amp; Zoos | Ex-situ: National Parks &amp; Wildlife Sanctuaries",
+          "In-situ: Gene Banks &amp; Tissue Culture | Ex-situ: Ramsar Wetlands &amp; Coral Reefs",
+          "In-situ: Aquaria &amp; Arboreta | Ex-situ: Tiger Reserves &amp; Community Reserves"
+        ],
+        answer: 0,
+        formula: "In-situ = On-site (Natural Habitat)  |  Ex-situ = Off-site (Controlled Facility)",
+        steps: [
+          "1. <strong>In-situ</strong> protects species inside their native ecosystems (National Parks, Wildlife Sanctuaries, Biosphere Reserves, Sacred Groves).",
+          "2. <strong>Ex-situ</strong> preserves genetic material outside native habitats (Seed Banks, Cryopreservation in liquid N<sub>2</sub> at &minus;196&deg;C, Zoos, Botanical Gardens)."
+        ]
+      },
+
+      // ==================== TOPIC 5: AIR POLLUTANTS & STANDARDS (9) ====================
+      {
+        id: 35,
+        topic: "Air Pollutants & Standards",
+        type: "Numerical",
+        q: "At <strong>25&deg;C and 1 atm</strong> (molar volume = <strong>24.45 L mol<sup>&minus;1</sup></strong>), the ambient concentration of <strong>SO<sub>2</sub></strong> (molar mass = <strong>64 g mol<sup>&minus;1</sup></strong>) is <strong>0.05 ppm</strong>. What is the equivalent concentration in <strong>&mu;g m<sup>&minus;3</sup></strong>?",
+        options: ["65.4 &mu;g m<sup>&minus;3</sup>", "130.9 &mu;g m<sup>&minus;3</sup>", "142.8 &mu;g m<sup>&minus;3</sup>", "261.8 &mu;g m<sup>&minus;3</sup>"],
+        answer: 1,
+        formula: "C (&mu;g m<sup>&minus;3</sup>) = [C (ppm) &times; M &times; 1000] / 24.45",
+        steps: [
+          "1. Given: C = 0.05 ppm, M(SO<sub>2</sub>) = 64 g mol<sup>&minus;1</sup>, V<sub>m</sub> = 24.45 L mol<sup>&minus;1</sup>.",
+          "2. Numerator: 0.05 &times; 64 &times; 1000 = <strong>3200</strong>.",
+          "3. C = 3200 / 24.45 = <strong>130.9 &mu;g m<sup>&minus;3</sup></strong>."
+        ]
+      },
+      {
+        id: 36,
+        topic: "Air Pollutants & Standards",
+        type: "Numerical",
+        q: "At <strong>25&deg;C and 1 atm</strong> (V<sub>m</sub> = 24.45 L mol<sup>&minus;1</sup>), an urban monitor records <strong>NO<sub>2</sub></strong> (M = <strong>46 g mol<sup>&minus;1</sup></strong>) at <strong>92 &mu;g m<sup>&minus;3</sup></strong>. Convert this concentration to <strong>ppb</strong> (parts per billion by volume).",
+        options: ["24.5 ppb", "48.9 ppb", "64.2 ppb", "92.0 ppb"],
+        answer: 1,
+        formula: "C (ppb) = [C (&mu;g m<sup>&minus;3</sup>) &times; 24.45] / M",
+        steps: [
+          "1. Given: C = 92 &mu;g m<sup>&minus;3</sup>, M(NO<sub>2</sub>) = 46 g mol<sup>&minus;1</sup>.",
+          "2. Note that 92 / 46 = <strong>2.0</strong>.",
+          "3. C (ppb) = 2.0 &times; 24.45 = <strong>48.9 ppb</strong>."
+        ]
+      },
+      {
+        id: 37,
+        topic: "Air Pollutants & Standards",
+        type: "Numerical",
+        q: "At STP (<strong>0&deg;C and 1 atm</strong>, molar volume = <strong>22.41 L mol<sup>&minus;1</sup></strong>), carbon monoxide (<strong>CO</strong>, M = <strong>28 g mol<sup>&minus;1</sup></strong>) is measured at <strong>10 ppm</strong>. What is its concentration in <strong>mg m<sup>&minus;3</sup></strong>?",
+        options: ["11.45 mg m<sup>&minus;3</sup>", "12.49 mg m<sup>&minus;3</sup>", "14.00 mg m<sup>&minus;3</sup>", "22.41 mg m<sup>&minus;3</sup>"],
+        answer: 1,
+        formula: "C (mg m<sup>&minus;3</sup>) = [C (ppm) &times; M] / V<sub>m</sub>",
+        steps: [
+          "1. At 0&deg;C and 1 atm, V<sub>m</sub> = 22.41 L mol<sup>&minus;1</sup> (do not use 24.45!).",
+          "2. C (mg m<sup>&minus;3</sup>) = (10 &times; 28) / 22.41 = 280 / 22.41 = <strong>12.49 mg m<sup>&minus;3</sup></strong>."
+        ]
+      },
+      {
+        id: 38,
+        topic: "Air Pollutants & Standards",
+        type: "Numerical",
+        q: "A coal-fired power plant burns <strong>1000 tonnes day<sup>&minus;1</sup></strong> of coal containing <strong>2.0% sulfur</strong> by weight. If <strong>5%</strong> of the sulfur remains in the bottom ash and the rest oxidizes completely to SO<sub>2</sub>, how many tonnes of SO<sub>2</sub> are emitted per day?",
+        options: ["19 tonnes day<sup>&minus;1</sup>", "20 tonnes day<sup>&minus;1</sup>", "38 tonnes day<sup>&minus;1</sup>", "40 tonnes day<sup>&minus;1</sup>"],
+        answer: 2,
+        formula: "S + O<sub>2</sub> &rarr; SO<sub>2</sub>  (32 g S produces 64 g SO<sub>2</sub> &rArr; Factor of 2)",
+        steps: [
+          "1. Total sulfur in coal = 1000 t &times; 0.02 = <strong>20 tonnes S day<sup>&minus;1</sup></strong>.",
+          "2. Sulfur oxidized to gas (95%) = 20 &times; 0.95 = <strong>19 tonnes S day<sup>&minus;1</sup></strong>.",
+          "3. Mass of SO<sub>2</sub> = 19 &times; (64 / 32) = 19 &times; 2 = <strong>38 tonnes SO<sub>2</sub> day<sup>&minus;1</sup></strong>."
+        ]
+      },
+      {
+        id: 39,
+        topic: "Air Pollutants & Standards",
+        type: "Numerical",
+        q: "Using the CPCB Air Quality Index (AQI) linear interpolation formula, calculate the sub-index for a 24-hour <strong>PM<sub>2.5</sub></strong> concentration of <strong>75 &mu;g m<sup>&minus;3</sup></strong>, given breakpoints <strong>B<sub>LO</sub> = 60, B<sub>HI</sub> = 90 &mu;g m<sup>&minus;3</sup></strong> corresponding to <strong>I<sub>LO</sub> = 100, I<sub>HI</sub> = 200</strong>.",
+        options: ["125", "150", "167", "175"],
+        answer: 1,
+        formula: "I<sub>p</sub> = [(I<sub>HI</sub> &minus; I<sub>LO</sub>) / (B<sub>HI</sub> &minus; B<sub>LO</sub>)] &times; (C<sub>p</sub> &minus; B<sub>LO</sub>) + I<sub>LO</sub>",
+        steps: [
+          "1. Slope = (200 &minus; 100) / (90 &minus; 60) = 100 / 30 = 3.333.",
+          "2. Concentration above lower breakpoint: (75 &minus; 60) = 15.",
+          "3. I<sub>p</sub> = (100 / 30) &times; 15 + 100 = 50 + 100 = <strong>150</strong> (Moderately Polluted)."
+        ]
+      },
+      {
+        id: 40,
+        topic: "Air Pollutants & Standards",
+        type: "Numerical",
+        q: "Under the tropospheric photostationary state (Leighton Relationship), <strong>[O<sub>3</sub>] = (J<sub>1</sub> [NO<sub>2</sub>]) / (k<sub>3</sub> [NO])</strong>. If <strong>J<sub>1</sub> = 0.01 s<sup>&minus;1</sup></strong>, <strong>k<sub>3</sub> = 0.0005 ppb<sup>&minus;1</sup> s<sup>&minus;1</sup></strong>, <strong>[NO<sub>2</sub>] = 40 ppb</strong>, and <strong>[NO] = 10 ppb</strong>, what is the steady-state ozone concentration?",
+        options: ["20 ppb", "40 ppb", "80 ppb", "160 ppb"],
+        answer: 2,
+        formula: "[O<sub>3</sub>] = (J<sub>1</sub> [NO<sub>2</sub>]) / (k<sub>3</sub> [NO])",
+        steps: [
+          "1. Numerator: J<sub>1</sub> &times; [NO<sub>2</sub>] = 0.01 &times; 40 = <strong>0.40 ppb s<sup>&minus;1</sup></strong>.",
+          "2. Denominator: k<sub>3</sub> &times; [NO] = 0.0005 &times; 10 = <strong>0.005 s<sup>&minus;1</sup></strong>.",
+          "3. [O<sub>3</sub>] = 0.40 / 0.005 = <strong>80 ppb</strong>."
+        ]
+      },
+      {
+        id: 41,
+        topic: "Air Pollutants & Standards",
+        type: "Numerical",
+        q: "Using a steady-state urban Airshed Box Model, a city of downwind length <strong>L = 20 km</strong> has a mixing height <strong>H = 500 m</strong> and wind speed <strong>u = 4 m s<sup>&minus;1</sup></strong>. If the area emission rate is <strong>q<sub>s</sub> = 2 &mu;g m<sup>&minus;2</sup> s<sup>&minus;1</sup></strong> and upwind background concentration is <strong>C<sub>b</sub> = 10 &mu;g m<sup>&minus;3</sup></strong>, what is the steady-state pollutant concentration?",
+        options: ["20 &mu;g m<sup>&minus;3</sup>", "30 &mu;g m<sup>&minus;3</sup>", "40 &mu;g m<sup>&minus;3</sup>", "50 &mu;g m<sup>&minus;3</sup>"],
+        answer: 1,
+        formula: "C = C<sub>b</sub> + (q<sub>s</sub> &middot; L) / (u &middot; H)",
+        steps: [
+          "1. Convert length L to meters: L = 20 km = <strong>20,000 m</strong>.",
+          "2. Ventilation factor u &middot; H = 4 &times; 500 = <strong>2000 m<sup>2</sup> s<sup>&minus;1</sup></strong>.",
+          "3. Urban increment = (2 &times; 20,000) / 2000 = 40,000 / 2000 = <strong>20 &mu;g m<sup>&minus;3</sup></strong>.",
+          "4. Total concentration C = 10 + 20 = <strong>30 &mu;g m<sup>&minus;3</sup></strong>."
+        ]
+      },
+      {
+        id: 42,
+        topic: "Air Pollutants & Standards",
+        type: "Conceptual",
+        q: "Under India's CPCB National Ambient Air Quality Standards (NAAQS, 2009) for Industrial/Residential areas, what are the <strong>24-hour</strong> permissible limits for <strong>PM<sub>2.5</sub></strong> and <strong>PM<sub>10</sub></strong>, respectively?",
+        options: [
+          "40 &mu;g m<sup>&minus;3</sup> and 60 &mu;g m<sup>&minus;3</sup>",
+          "60 &mu;g m<sup>&minus;3</sup> and 100 &mu;g m<sup>&minus;3</sup>",
+          "15 &mu;g m<sup>&minus;3</sup> and 45 &mu;g m<sup>&minus;3</sup>",
+          "80 &mu;g m<sup>&minus;3</sup> and 120 &mu;g m<sup>&minus;3</sup>"
+        ],
+        answer: 1,
+        formula: "CPCB NAAQS (2009): PM<sub>2.5</sub> (60 24h / 40 Annual) | PM<sub>10</sub> (100 24h / 60 Annual)",
+        steps: [
+          "1. CPCB 24-hour standards are <strong>60 &mu;g m<sup>&minus;3</sup></strong> for PM<sub>2.5</sub> and <strong>100 &mu;g m<sup>&minus;3</sup></strong> for PM<sub>10</sub>.",
+          "2. (Option A gives the CPCB annual averages; Option C gives the stricter WHO 2021 24-hour guidelines.)"
+        ]
+      },
+      {
+        id: 43,
+        topic: "Air Pollutants & Standards",
+        type: "Conceptual",
+        q: "How does <strong>Photochemical (Los Angeles) Smog</strong> fundamentally differ from <strong>Classical (London) Smog</strong>?",
+        options: [
+          "Photochemical smog is chemically oxidizing (rich in O<sub>3</sub>, NO<sub>x</sub>, PAN) and peaks in warm sunny afternoons; Classical smog is chemically reducing (rich in SO<sub>2</sub>, soot) and peaks in cold, foggy mornings.",
+          "Photochemical smog is reducing and driven by coal burning; Classical smog is oxidizing and driven by vehicular VOCs.",
+          "Both smogs are strictly oxidizing and require temperatures below 0&deg;C.",
+          "Photochemical smog contains only primary pollutants, whereas Classical smog contains only secondary pollutants."
+        ],
+        answer: 0,
+        formula: "London = SO<sub>2</sub> + Soot + Fog (Reducing)  |  LA = NO<sub>x</sub> + VOCs + UV &rarr; O<sub>3</sub> + PAN (Oxidizing)",
+        steps: [
+          "1. <strong>Classical (London) Smog:</strong> Cool, humid winter mornings; sulfur-rich coal combustion produces SO<sub>2</sub> and smoke (reducing mixture).",
+          "2. <strong>Photochemical (LA) Smog:</strong> Warm, dry, sunny conditions; UV photolysis of NO<sub>2</sub> in the presence of VOCs forms secondary oxidants (O<sub>3</sub>, PAN, aldehydes)."
+        ]
+      },
+
+      // ==================== TOPIC 6: MONITORING & IMPACTS (9) ====================
+      {
+        id: 44,
+        topic: "Monitoring & Impacts",
+        type: "Numerical",
+        q: "An industrial stack with effective height <strong>H = 100 m</strong> emits SO<sub>2</sub> at <strong>Q = 100 g s<sup>&minus;1</sup></strong> into a steady wind <strong>u = 5 m s<sup>&minus;1</sup></strong>. At 1 km downwind along the plume centerline (y = 0), <strong>&sigma;<sub>y</sub> = 100 m</strong> and <strong>&sigma;<sub>z</sub> = 50 m</strong>. Given <strong>&pi; &approx; 3.14</strong> and <strong>e<sup>&minus;2</sup> &approx; 0.135</strong>, find the ground-level centerline concentration (z = 0).",
+        options: ["86 &mu;g m<sup>&minus;3</sup>", "172 &mu;g m<sup>&minus;3</sup>", "344 &mu;g m<sup>&minus;3</sup>", "637 &mu;g m<sup>&minus;3</sup>"],
+        answer: 1,
+        formula: "C(x,0,0) = [Q / (&pi; u &sigma;<sub>y</sub> &sigma;<sub>z</sub>)] &middot; exp(&minus;H<sup>2</sup> / 2&sigma;<sub>z</sub><sup>2</sup>)",
+        steps: [
+          "1. Pre-exponential denominator: &pi; &times; 5 &times; 100 &times; 50 = 3.14 &times; 25,000 = <strong>78,500 m<sup>3</sup> s<sup>&minus;1</sup></strong>.",
+          "2. Q / (&pi; u &sigma;<sub>y</sub> &sigma;<sub>z</sub>) = 100 / 78,500 = <strong>1.274 &times; 10<sup>&minus;3</sup> g m<sup>&minus;3</sup></strong> = 1274 &mu;g m<sup>&minus;3</sup>.",
+          "3. Exponent: &minus;H<sup>2</sup> / (2&sigma;<sub>z</sub><sup>2</sup>) = &minus;(100<sup>2</sup>) / (2 &times; 50<sup>2</sup>) = &minus;10,000 / 5,000 = <strong>&minus;2</strong>.",
+          "4. Ground-level concentration = 1274 &times; e<sup>&minus;2</sup> = 1274 &times; 0.135 = <strong>172 &mu;g m<sup>&minus;3</sup></strong>."
+        ]
+      },
+      {
+        id: 45,
+        topic: "Monitoring & Impacts",
+        type: "Numerical",
+        q: "A High Volume Air Sampler (HVAS) operates continuously for <strong>24 hours</strong> to monitor PM<sub>10</sub>. The clean filter weighs <strong>3.500 g</strong> before sampling and <strong>3.680 g</strong> afterward. If flow rate drops linearly from <strong>1.30 m<sup>3</sup> min<sup>&minus;1</sup></strong> to <strong>1.10 m<sup>3</sup> min<sup>&minus;1</sup></strong>, what is the 24-hour average PM<sub>10</sub> concentration?",
+        options: ["86.8 &mu;g m<sup>&minus;3</sup>", "104.2 &mu;g m<sup>&minus;3</sup>", "125.0 &mu;g m<sup>&minus;3</sup>", "150.0 &mu;g m<sup>&minus;3</sup>"],
+        answer: 1,
+        formula: "C = (&Delta;m &times; 10<sup>6</sup>) / (Q<sub>avg</sub> &times; t)",
+        steps: [
+          "1. Mass of PM<sub>10</sub> collected (&Delta;m) = 3.680 &minus; 3.500 = 0.180 g = <strong>180,000 &mu;g</strong>.",
+          "2. Average flow rate Q<sub>avg</sub> = (1.30 + 1.10) / 2 = <strong>1.20 m<sup>3</sup> min<sup>&minus;1</sup></strong>.",
+          "3. Total sampling time t = 24 hr &times; 60 min/hr = <strong>1440 min</strong>.",
+          "4. Total air volume V = 1.20 &times; 1440 = <strong>1728 m<sup>3</sup></strong>.",
+          "5. Concentration C = 180,000 / 1728 = <strong>104.2 &mu;g m<sup>&minus;3</sup></strong>."
+        ]
+      },
+      {
+        id: 46,
+        topic: "Monitoring & Impacts",
+        type: "Numerical",
+        q: "A meteorological sounding records <strong>24&deg;C</strong> at ground level (z = 0 m) and <strong>18&deg;C</strong> at <strong>500 m</strong> elevation. Comparing the Environmental Lapse Rate (ELR) with the Dry Adiabatic Lapse Rate (<strong>DALR = 9.8&deg;C km<sup>&minus;1</sup></strong>), identify the stability class and plume type.",
+        options: [
+          "Stable atmosphere; Fanning plume",
+          "Neutral atmosphere; Coning plume",
+          "Unstable (super-adiabatic) atmosphere; Looping plume",
+          "Inversion aloft; Fumigation plume"
+        ],
+        answer: 2,
+        formula: "ELR = &minus;&Delta;T / &Delta;z  |  ELR > DALR &rArr; Unstable (Looping)",
+        steps: [
+          "1. &Delta;T = 18 &minus; 24 = &minus;6&deg;C over &Delta;z = 500 m = 0.5 km.",
+          "2. ELR = &minus;(&minus;6) / 0.5 = <strong>12.0&deg;C km<sup>&minus;1</sup></strong>.",
+          "3. Since ELR (12.0) > DALR (9.8), the atmosphere is <strong>super-adiabatic (strongly unstable)</strong>, generating vigorous thermal eddies and a <strong>looping plume</strong>."
+        ]
+      },
+      {
+        id: 47,
+        topic: "Monitoring & Impacts",
+        type: "Numerical",
+        q: "On a clear winter night, surface air temperature is <strong>15&deg;C</strong> while air at <strong>400 m</strong> altitude is <strong>19&deg;C</strong>. Calculate the Environmental Lapse Rate (ELR) and identify the resulting plume behavior.",
+        options: [
+          "ELR = &minus;10&deg;C km<sup>&minus;1</sup> (Inversion); Fanning plume",
+          "ELR = +10&deg;C km<sup>&minus;1</sup> (Neutral); Coning plume",
+          "ELR = &minus;4&deg;C km<sup>&minus;1</sup> (Sub-adiabatic); Lofting plume",
+          "ELR = +16&deg;C km<sup>&minus;1</sup> (Super-adiabatic); Looping plume"
+        ],
+        answer: 0,
+        formula: "ELR = &minus;(T<sub>2</sub> &minus; T<sub>1</sub>) / (z<sub>2</sub> &minus; z<sub>1</sub>)",
+        steps: [
+          "1. T<sub>2</sub> &minus; T<sub>1</sub> = 19 &minus; 15 = +4&deg;C over &Delta;z = 0.4 km.",
+          "2. ELR = &minus;(+4) / 0.4 = <strong>&minus;10&deg;C km<sup>&minus;1</sup></strong>.",
+          "3. A negative ELR signifies a <strong>radiation temperature inversion</strong> (extremely stable), which suppresses vertical mixing and creates a flat, ribbon-like <strong>fanning plume</strong>."
+        ]
+      },
+      {
+        id: 48,
+        topic: "Monitoring & Impacts",
+        type: "Numerical",
+        q: "An anemometer at <strong>10 m</strong> height measures a wind speed of <strong>3.0 m s<sup>&minus;1</sup></strong>. Under neutral atmospheric stability (power-law exponent <strong>p = 0.25</strong>), what is the wind speed at an effective stack height of <strong>160 m</strong>?",
+        options: ["4.5 m s<sup>&minus;1</sup>", "6.0 m s<sup>&minus;1</sup>", "9.0 m s<sup>&minus;1</sup>", "12.0 m s<sup>&minus;1</sup>"],
+        answer: 1,
+        formula: "u<sub>2</sub> = u<sub>1</sub> &middot; (z<sub>2</sub> / z<sub>1</sub>)<sup>p</sup>",
+        steps: [
+          "1. Height ratio z<sub>2</sub> / z<sub>1</sub> = 160 / 10 = <strong>16</strong>.",
+          "2. Raise to exponent p = 0.25 (fourth root): 16<sup>0.25</sup> = <strong>2.0</strong>.",
+          "3. u<sub>2</sub> = 3.0 &times; 2.0 = <strong>6.0 m s<sup>&minus;1</sup></strong>."
+        ]
+      },
+      {
+        id: 49,
+        topic: "Monitoring & Impacts",
+        type: "Numerical",
+        q: "Unpolluted rainwater in equilibrium with atmospheric CO<sub>2</sub> has a <strong>pH of 5.6</strong>. During an acid rain event, rainwater pH drops to <strong>3.6</strong>. By what factor has the hydrogen ion concentration [H<sup>+</sup>] increased?",
+        options: ["2 times", "20 times", "100 times", "1000 times"],
+        answer: 2,
+        formula: "[H<sup>+</sup>]<sub>2</sub> / [H<sup>+</sup>]<sub>1</sub> = 10<sup>(pH<sub>1</sub> &minus; pH<sub>2</sub>)</sup>",
+        steps: [
+          "1. pH difference = 5.6 &minus; 3.6 = <strong>2.0 units</strong>.",
+          "2. Because pH is a base-10 logarithmic scale, [H<sup>+</sup>] increases by 10<sup>2</sup> = <strong>100 times</strong>."
+        ]
+      },
+      {
+        id: 50,
+        topic: "Monitoring & Impacts",
+        type: "Numerical",
+        q: "A municipal landfill emits <strong>50 tonnes</strong> of methane (CH<sub>4</sub>, <strong>GWP<sub>100</sub> = 28</strong>) and <strong>2 tonnes</strong> of nitrous oxide (N<sub>2</sub>O, <strong>GWP<sub>100</sub> = 265</strong>) in a year. What is the total carbon dioxide equivalent (<strong>CO<sub>2</sub>e</strong>) emission?",
+        options: ["1400 tonnes CO<sub>2</sub>e", "1665 tonnes CO<sub>2</sub>e", "1930 tonnes CO<sub>2</sub>e", "2450 tonnes CO<sub>2</sub>e"],
+        answer: 2,
+        formula: "Total CO<sub>2</sub>e = &Sigma; (Mass<sub>i</sub> &times; GWP<sub>i</sub>)",
+        steps: [
+          "1. CH<sub>4</sub> contribution = 50 &times; 28 = <strong>1400 tonnes CO<sub>2</sub>e</strong>.",
+          "2. N<sub>2</sub>O contribution = 2 &times; 265 = <strong>530 tonnes CO<sub>2</sub>e</strong>.",
+          "3. Total CO<sub>2</sub>e = 1400 + 530 = <strong>1930 tonnes CO<sub>2</sub>e</strong>."
+        ]
+      },
+      {
+        id: 51,
+        topic: "Monitoring & Impacts",
+        type: "Numerical",
+        q: "A smokestack has a physical height <strong>h = 80 m</strong> and produces a plume rise <strong>&Delta;h = 25 m</strong> at a wind speed of 3 m s<sup>&minus;1</sup>. Assuming plume rise is inversely proportional to wind speed (Holland's relation, <strong>&Delta;h &prop; 1/u</strong>), what will be the new effective stack height (<strong>H</strong>) if the wind speed doubles to 6 m s<sup>&minus;1</sup>?",
+        options: ["52.5 m", "92.5 m", "105.0 m", "130.0 m"],
+        answer: 1,
+        formula: "H = h + &Delta;h  |  &Delta;h<sub>2</sub> / &Delta;h<sub>1</sub> = u<sub>1</sub> / u<sub>2</sub>",
+        steps: [
+          "1. When wind speed doubles (u<sub>2</sub> = 2u<sub>1</sub>), plume rise is halved: &Delta;h<sub>2</sub> = 25 / 2 = <strong>12.5 m</strong>.",
+          "2. Physical stack height h remains 80 m.",
+          "3. New effective stack height H = 80 + 12.5 = <strong>92.5 m</strong>."
+        ]
+      },
+      {
+        id: 52,
+        topic: "Monitoring & Impacts",
+        type: "Conceptual",
+        q: "Which set correctly matches ambient air pollutants with their standard continuous automated analyzer principles (CAAQMS)?",
+        options: [
+          "SO<sub>2</sub>: UV Fluorescence | NO<sub>x</sub>: Chemiluminescence | CO: Non-Dispersive Infrared (NDIR)",
+          "SO<sub>2</sub>: NDIR | NO<sub>x</sub>: UV Fluorescence | CO: Beta Attenuation",
+          "SO<sub>2</sub>: Chemiluminescence | NO<sub>x</sub>: Gravimetric | CO: UV Photometry",
+          "SO<sub>2</sub>: Beta Attenuation | NO<sub>x</sub>: NDIR | CO: West-Gaeke Colorimetry"
+        ],
+        answer: 0,
+        formula: "CAAQMS Standards: SO<sub>2</sub> (UV-F), NO<sub>x</sub> (Chemiluminescence), CO (NDIR), O<sub>3</sub> (UV Photometry), PM (BAM)",
+        steps: [
+          "1. <strong>SO<sub>2</sub></strong> is continuously measured by UV fluorescence (wet chemical reference: Improved West-Gaeke method).",
+          "2. <strong>NO<sub>x</sub></strong> is measured via gas-phase chemiluminescence with O<sub>3</sub> (wet reference: Jacob-Hochheiser method).",
+          "3. <strong>CO</strong> is measured via Non-Dispersive Infrared (NDIR) absorption spectroscopy."
+        ]
+      },
+
+      // ==================== TOPIC 7: AIR POLLUTION CONTROL TECHNOLOGIES (8) ====================
+      {
+        id: 53,
+        topic: "Air Pollution Control Technologies",
+        type: "Numerical",
+        q: "An Electrostatic Precipitator (ESP) treats flue gas at <strong>Q = 100 m<sup>3</sup> s<sup>&minus;1</sup></strong> with a total collector plate area <strong>A = 3000 m<sup>2</sup></strong> and particle drift velocity <strong>w = 0.10 m s<sup>&minus;1</sup></strong>. Given <strong>e<sup>&minus;3</sup> &approx; 0.05</strong>, calculate the collection efficiency (<strong>&eta;</strong>).",
+        options: ["85.0%", "90.0%", "95.0%", "99.5%"],
+        answer: 2,
+        formula: "Deutsch-Anderson Equation: &eta; = 1 &minus; exp(&minus;wA / Q)",
+        steps: [
+          "1. Calculate exponent: &minus;(wA / Q) = &minus;(0.10 &times; 3000) / 100 = &minus;300 / 100 = <strong>&minus;3</strong>.",
+          "2. Penetration = e<sup>&minus;3</sup> &approx; 0.05.",
+          "3. Efficiency &eta; = 1 &minus; 0.05 = 0.95 = <strong>95.0%</strong>."
+        ]
+      },
+      {
+        id: 54,
+        topic: "Air Pollution Control Technologies",
+        type: "Numerical",
+        q: "An existing Electrostatic Precipitator with plate area <strong>A<sub>1</sub> = 2000 m<sup>2</sup></strong> achieves <strong>90%</strong> particulate collection efficiency. Assuming constant gas flow rate (Q) and drift velocity (w), what total plate area (<strong>A<sub>2</sub></strong>) is needed to upgrade efficiency to <strong>99%</strong>?",
+        options: ["2200 m<sup>2</sup>", "3000 m<sup>2</sup>", "4000 m<sup>2</sup>", "6000 m<sup>2</sup>"],
+        answer: 2,
+        formula: "1 &minus; &eta; = exp(&minus;wA / Q)  &rArr;  A<sub>2</sub> / A<sub>1</sub> = ln(1 &minus; &eta;<sub>2</sub>) / ln(1 &minus; &eta;<sub>1</sub>)",
+        steps: [
+          "1. At 90% efficiency, penetration P<sub>1</sub> = 1 &minus; 0.90 = 0.10 = 10<sup>&minus;1</sup>.",
+          "2. At 99% efficiency, penetration P<sub>2</sub> = 1 &minus; 0.99 = 0.01 = 10<sup>&minus;2</sup> = (P<sub>1</sub>)<sup>2</sup>.",
+          "3. Taking logs: A<sub>2</sub> / A<sub>1</sub> = ln(0.01) / ln(0.10) = <strong>2</strong>.",
+          "4. Required area A<sub>2</sub> = 2 &times; 2000 = <strong>4000 m<sup>2</sup></strong> (doubling area cuts penetration by a factor of 10)."
+        ]
+      },
+      {
+        id: 55,
+        topic: "Air Pollution Control Technologies",
+        type: "Numerical",
+        q: "A rectangular gravitational settling chamber has length <strong>L = 10 m</strong>, width <strong>W = 4 m</strong>, and height <strong>H = 2 m</strong>. If dust-laden gas enters at <strong>Q = 8 m<sup>3</sup> s<sup>&minus;1</sup></strong>, what is the minimum terminal settling velocity (<strong>v<sub>t</sub></strong>) required for <strong>100%</strong> collection of particles?",
+        options: ["0.10 m s<sup>&minus;1</sup>", "0.20 m s<sup>&minus;1</sup>", "0.40 m s<sup>&minus;1</sup>", "1.00 m s<sup>&minus;1</sup>"],
+        answer: 1,
+        formula: "v<sub>t,min</sub> = Q / (W &middot; L)  (Independent of chamber height H!)",
+        steps: [
+          "1. Residence time t<sub>r</sub> = Volume / Q = (L &middot; W &middot; H) / Q.",
+          "2. For 100% collection, a particle entering at the top must settle height H in time t<sub>r</sub>: v<sub>t</sub> = H / t<sub>r</sub> = Q / (W &middot; L).",
+          "3. v<sub>t</sub> = 8 / (4 &times; 10) = 8 / 40 = <strong>0.20 m s<sup>&minus;1</sup></strong>."
+        ]
+      },
+      {
+        id: 56,
+        topic: "Air Pollution Control Technologies",
+        type: "Numerical",
+        q: "Flue gas containing <strong>10 g m<sup>&minus;3</sup></strong> of dust passes in series through a Cyclone Separator (<strong>&eta;<sub>1</sub> = 80%</strong>) followed by a Baghouse Filter (<strong>&eta;<sub>2</sub> = 99%</strong>). Find the overall collection efficiency and final outlet dust concentration.",
+        options: [
+          "99.0% and 100 mg m<sup>&minus;3</sup>",
+          "99.8% and 20 mg m<sup>&minus;3</sup>",
+          "99.9% and 10 mg m<sup>&minus;3</sup>",
+          "89.5% and 1050 mg m<sup>&minus;3</sup>"
+        ],
+        answer: 1,
+        formula: "P<sub>total</sub> = (1 &minus; &eta;<sub>1</sub>)(1 &minus; &eta;<sub>2</sub>)  |  &eta;<sub>total</sub> = 1 &minus; P<sub>total</sub>",
+        steps: [
+          "1. Cyclone penetration P<sub>1</sub> = 1 &minus; 0.80 = 0.20.",
+          "2. Baghouse penetration P<sub>2</sub> = 1 &minus; 0.99 = 0.01.",
+          "3. Overall penetration P<sub>total</sub> = 0.20 &times; 0.01 = <strong>0.002</strong> (0.2%).",
+          "4. Overall efficiency &eta;<sub>total</sub> = 1 &minus; 0.002 = <strong>99.8%</strong>.",
+          "5. Outlet concentration = 10 g m<sup>&minus;3</sup> &times; 0.002 = 0.02 g m<sup>&minus;3</sup> = <strong>20 mg m<sup>&minus;3</sup></strong>."
+        ]
+      },
+      {
+        id: 57,
+        topic: "Air Pollution Control Technologies",
+        type: "Numerical",
+        q: "A pulse-jet baghouse must treat <strong>Q = 600 m<sup>3</sup> min<sup>&minus;1</sup></strong> of exhaust gas at a design Air-to-Cloth (<strong>A/C</strong>) ratio of <strong>1.5 m<sup>3</sup> min<sup>&minus;1</sup> m<sup>&minus;2</sup></strong>. If each filter bag provides an effective cloth area of <strong>2.5 m<sup>2</sup></strong>, how many filter bags are required?",
+        options: ["120 bags", "160 bags", "240 bags", "360 bags"],
+        answer: 1,
+        formula: "Total Cloth Area A = Q / (A/C Ratio)  |  N<sub>bags</sub> = A / A<sub>bag</sub>",
+        steps: [
+          "1. Required total cloth area A = 600 / 1.5 = <strong>400 m<sup>2</sup></strong>.",
+          "2. Number of bags = 400 / 2.5 = <strong>160 bags</strong>."
+        ]
+      },
+      {
+        id: 58,
+        topic: "Air Pollution Control Technologies",
+        type: "Numerical",
+        q: "According to Lapple's cyclone design equation, the 50% cut diameter scales as <strong>d<sub>50</sub> &prop; &radic;[&mu; W / (N<sub>e</sub> V<sub>i</sub> &rho;<sub>p</sub>)]</strong>. If the gas inlet velocity (<strong>V<sub>i</sub></strong>) is quadrupled (4&times;) while all other parameters remain constant, how does d<sub>50</sub> change?",
+        options: [
+          "Increases by a factor of 2",
+          "Decreases by 50% (halved)",
+          "Decreases by 75% (quartered)",
+          "Remains unchanged"
+        ],
+        answer: 1,
+        formula: "d<sub>50</sub> &prop; 1 / &radic;V<sub>i</sub>",
+        steps: [
+          "1. Since V<sub>i</sub> is in the denominator inside the square root, d<sub>50,new</sub> / d<sub>50,old</sub> = 1 / &radic;4 = <strong>1/2</strong>.",
+          "2. Thus, d<sub>50</sub> is <strong>halved (reduced by 50%)</strong>, meaning the cyclone captures smaller particles more efficiently (at the cost of higher pressure drop)."
+        ]
+      },
+      {
+        id: 59,
+        topic: "Air Pollution Control Technologies",
+        type: "Numerical",
+        q: "In a wet limestone Flue Gas Desulfurization (FGD) unit, SO<sub>2</sub> is absorbed via: <strong>CaCO<sub>3</sub> + SO<sub>2</sub> + &frac12;O<sub>2</sub> &rarr; CaSO<sub>4</sub> + CO<sub>2</sub></strong>. Given molar masses <strong>CaCO<sub>3</sub> = 100 g mol<sup>&minus;1</sup></strong> and <strong>SO<sub>2</sub> = 64 g mol<sup>&minus;1</sup></strong>, how many tonnes of pure limestone are required stoichiometrically to remove <strong>32 tonnes</strong> of SO<sub>2</sub>?",
+        options: ["25 tonnes", "32 tonnes", "50 tonnes", "64 tonnes"],
+        answer: 2,
+        formula: "1 mole SO<sub>2</sub> (64 g) requires 1 mole CaCO<sub>3</sub> (100 g)",
+        steps: [
+          "1. Moles (megamoles) of SO<sub>2</sub> = 32 / 64 = <strong>0.50 Mmol</strong>.",
+          "2. Stoichiometric ratio is 1:1, so 0.50 Mmol of CaCO<sub>3</sub> is required.",
+          "3. Mass of CaCO<sub>3</sub> = 0.50 &times; 100 = <strong>50 tonnes</strong>."
+        ]
+      },
+      {
+        id: 60,
+        topic: "Air Pollution Control Technologies",
+        type: "Conceptual",
+        q: "Which statement accurately compares <strong>Selective Catalytic Reduction (SCR)</strong> and <strong>Selective Non-Catalytic Reduction (SNCR)</strong> for industrial NO<sub>x</sub> control?",
+        options: [
+          "SCR uses NH<sub>3</sub>/urea over a V<sub>2</sub>O<sub>5</sub>/TiO<sub>2</sub> catalyst at 300&ndash;400&deg;C achieving &gt;85% removal; SNCR operates without a catalyst at 850&ndash;1100&deg;C with lower (30&ndash;60%) removal.",
+          "SCR operates at 1000&deg;C without any reagent, whereas SNCR uses activated carbon at room temperature.",
+          "Both SCR and SNCR convert NO<sub>x</sub> into HNO<sub>3</sub> for landfill disposal.",
+          "SNCR achieves higher removal efficiency (&gt;95%) than SCR at temperatures below 200&deg;C."
+        ],
+        answer: 0,
+        formula: "4NO + 4NH<sub>3</sub> + O<sub>2</sub> &rarr; 4N<sub>2</sub> + 6H<sub>2</sub>O",
+        steps: [
+          "1. <strong>SCR:</strong> Uses a catalyst bed (typically V<sub>2</sub>O<sub>5</sub>/TiO<sub>2</sub>) to lower the activation energy, allowing NH<sub>3</sub> to reduce NO<sub>x</sub> to harmless N<sub>2</sub> and H<sub>2</sub>O at 300&ndash;400&deg;C with 80&ndash;95% efficiency.",
+          "2. <strong>SNCR:</strong> Injects ammonia/urea directly into the hot furnace zone (850&ndash;1100&deg;C) without a catalyst; cheaper capital cost but lower efficiency (30&ndash;60%)."
+        ]
+      }
+    ];
+
+    /* =========================================================================
+       APPLICATION STATE & PERSISTENCE
+       ========================================================================= */
+    const STORAGE_KEY = 'ugc_net_env_60q_state_v1';
+    const DEFAULT_TIME = 3 * 60 * 60; // 3 hours in seconds
+
+    let state = {
+      mode: 'study', // 'study' | 'exam'
+      answers: {},   // { questionId: selectedOptionIndex }
+      reviewed: {},  // { questionId: boolean }
+      currentIdx: 0, // index inside filteredQuestions
+      timeLeft: DEFAULT_TIME,
+      timerRunning: false,
+      examSubmitted: false
+    };
+
+    let filteredQuestions = [...QUESTIONS];
+    let timerInterval = null;
+
+    // Load saved state safely
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          state = { ...state, ...parsed, timerRunning: false };
+        }
+      } catch (e) {
+        // Ignore storage restrictions
+      }
+    }
+
+    function saveState() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({
+          mode: state.mode,
+          answers: state.answers,
+          reviewed: state.reviewed,
+          timeLeft: state.timeLeft,
+          examSubmitted: state.examSubmitted
+        }));
+      } catch (e) {
+        // Ignore storage restrictions
+      }
+    }
+
+    /* =========================================================================
+       TIMER LOGIC (3-HOUR COUNTDOWN)
+       ========================================================================= */
+    function formatTime(sec) {
+      const h = Math.floor(sec / 3600);
+      const m = Math.floor((sec % 3600) / 60);
+      const s = sec % 60;
+      return [h, m, s].map(v => String(v).padStart(2, '0')).join(':');
+    }
+
+    function updateTimerUI() {
+      const el = document.getElementById('timer-display');
+      const btn = document.getElementById('btn-timer-toggle');
+      el.textContent = formatTime(state.timeLeft);
+      btn.textContent = state.timerRunning ? 'Pause' : 'Start';
+      if (state.timeLeft < 600) {
+        el.classList.remove('text-amber-300');
+        el.classList.add('text-rose-400');
+      } else {
+        el.classList.add('text-amber-300');
+        el.classList.remove('text-rose-400');
+      }
+    }
+
+    function toggleTimer() {
+      if (state.timerRunning) {
+        clearInterval(timerInterval);
+        state.timerRunning = false;
+      } else {
+        if (state.timeLeft <= 0) state.timeLeft = DEFAULT_TIME;
+        state.timerRunning = true;
+        timerInterval = setInterval(() => {
+          if (state.timeLeft > 0) {
+            state.timeLeft--;
+            updateTimerUI();
+            if (state.timeLeft % 10 === 0) saveState();
+          } else {
+            clearInterval(timerInterval);
+            state.timerRunning = false;
+            state.examSubmitted = true;
+            updateTimerUI();
+            showToast('Time is up! Opening your Scorecard.');
+            openSubmitModal();
+          }
+        }, 1000);
+      }
+      updateTimerUI();
+    }
+
+    /* =========================================================================
+       MODE & FILTERING
+       ========================================================================= */
+    function setMode(newMode) {
+      state.mode = newMode;
+      const btnStudy = document.getElementById('btn-mode-study');
+      const btnExam = document.getElementById('btn-mode-exam');
+
+      if (newMode === 'study') {
+        btnStudy.className = 'px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all bg-white text-emerald-950 shadow-sm';
+        btnExam.className = 'px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all text-emerald-100 hover:text-white';
+        showToast('Study Mode: Instant feedback & worked solutions enabled.');
+      } else {
+        btnExam.className = 'px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all bg-amber-400 text-slate-950 shadow-sm';
+        btnStudy.className = 'px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all text-emerald-100 hover:text-white';
+        showToast('3-Hr Exam Mode: Solutions hidden until you open Scorecard.');
+        if (!state.timerRunning && state.timeLeft === DEFAULT_TIME) {
+          toggleTimer();
+        }
+      }
+      saveState();
+      renderAll();
+    }
+
+    function applyFilters() {
+      const topicVal = document.getElementById('topic-filter').value;
+      const typeVal = document.getElementById('type-filter').value;
+
+      filteredQuestions = QUESTIONS.filter(q => {
+        const matchTopic = topicVal === 'all' || q.topic === topicVal;
+        const matchType = typeVal === 'all' || q.type === typeVal;
+        return matchTopic && matchType;
+      });
+
+      state.currentIdx = 0;
+      renderAll();
+    }
+
+    /* =========================================================================
+       RENDERING QUESTION, OPTIONS, WORKED SOLUTION & PALETTE
+       ========================================================================= */
+    function renderAll() {
+      renderQuestion();
+      renderPalette();
+      renderMiniStats();
+      updateTimerUI();
+    }
+
+    function renderQuestion() {
+      const q = filteredQuestions[state.currentIdx];
+      if (!q) return;
+
+      // Meta badges
+      document.getElementById('q-number-badge').textContent = `Q${q.id} / 60`;
+      document.getElementById('q-topic-badge').textContent = q.topic;
+
+      const typeBadge = document.getElementById('q-type-badge');
+      typeBadge.textContent = q.type;
+      typeBadge.className = q.type === 'Numerical'
+        ? 'bg-amber-100 text-amber-900 text-xs font-semibold px-2.5 py-1 rounded-lg'
+        : 'bg-indigo-100 text-indigo-900 text-xs font-semibold px-2.5 py-1 rounded-lg';
+
+      // Review button
+      const revBtn = document.getElementById('btn-mark-review');
+      if (state.reviewed[q.id]) {
+        revBtn.textContent = '★ Marked for Review';
+        revBtn.className = 'text-xs font-semibold px-3 py-1.5 rounded-lg bg-amber-100 border border-amber-300 text-amber-900 transition-colors';
+      } else {
+        revBtn.textContent = '☆ Mark for Review';
+        revBtn.className = 'text-xs font-semibold px-3 py-1.5 rounded-lg border border-slate-300 text-slate-600 hover:bg-slate-100 transition-colors';
+      }
+
+      // Question text
+      document.getElementById('q-text').innerHTML = q.q;
+
+      // Options
+      const container = document.getElementById('options-container');
+      container.innerHTML = '';
+      const userChoice = state.answers[q.id];
+      const revealFeedback = (state.mode === 'study' && userChoice !== undefined) || state.examSubmitted;
+
+      const labels = ['A', 'B', 'C', 'D'];
+      q.options.forEach((optHtml, idx) => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.onclick = () => selectOption(q.id, idx);
+
+        let styleClass = 'border-slate-200 bg-white hover:border-emerald-400 hover:bg-emerald-50/40 text-slate-800';
+        let badgeClass = 'bg-slate-100 text-slate-700';
+
+        if (revealFeedback) {
+          if (idx === q.answer) {
+            styleClass = 'border-emerald-500 bg-emerald-50 text-emerald-950 ring-1 ring-emerald-500';
+            badgeClass = 'bg-emerald-600 text-white';
+          } else if (idx === userChoice && idx !== q.answer) {
+            styleClass = 'border-rose-400 bg-rose-50 text-rose-950 ring-1 ring-rose-400';
+            badgeClass = 'bg-rose-600 text-white';
+          }
+        } else if (idx === userChoice) {
+          styleClass = 'border-emerald-600 bg-emerald-50 text-emerald-950 ring-2 ring-emerald-500';
+          badgeClass = 'bg-emerald-700 text-white';
+        }
+
+        btn.className = `w-full text-left p-3.5 sm:p-4 rounded-xl border-2 flex items-center gap-3.5 transition-all ${styleClass}`;
+        btn.innerHTML = `
+          <span class="w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm shrink-0 ${badgeClass}">
+            ${labels[idx]}
+          </span>
+          <span class="text-sm sm:text-base font-medium leading-snug">${optHtml}</span>
+        `;
+        container.appendChild(btn);
+      });
+
+      // Nav buttons
+      document.getElementById('btn-prev').disabled = state.currentIdx === 0;
+      document.getElementById('btn-next').disabled = state.currentIdx === filteredQuestions.length - 1;
+
+      // Solution panel visibility
+      const solCard = document.getElementById('solution-card');
+      const solToggleBtn = document.getElementById('btn-toggle-solution');
+
+      if (state.mode === 'exam' && !state.examSubmitted) {
+        solToggleBtn.classList.add('hidden');
+        solCard.classList.add('hidden');
+      } else {
+        solToggleBtn.classList.remove('hidden');
+        populateSolution(q);
+        if (userChoice !== undefined || state.examSubmitted) {
+          solCard.classList.remove('hidden');
+          solToggleBtn.textContent = 'Hide Worked Example';
+        } else {
+          solCard.classList.add('hidden');
+          solToggleBtn.textContent = 'Show Worked Example';
+        }
+      }
+    }
+
+    function populateSolution(q) {
+      const labels = ['A', 'B', 'C', 'D'];
+      document.getElementById('sol-formula').innerHTML = q.formula;
+      document.getElementById('sol-steps').innerHTML = q.steps
+        .map(s => `<p class="bg-slate-50 border border-slate-100 rounded-lg px-3.5 py-2">${s}</p>`)
+        .join('');
+      document.getElementById('sol-answer').innerHTML = `Option ${labels[q.answer]}: ${q.options[q.answer]}`;
+
+      const statusBadge = document.getElementById('solution-status-badge');
+      const userChoice = state.answers[q.id];
+      if (userChoice === undefined) {
+        statusBadge.textContent = 'Worked Example';
+        statusBadge.className = 'text-xs font-bold px-2.5 py-1 rounded-lg bg-slate-200 text-slate-800';
+      } else if (userChoice === q.answer) {
+        statusBadge.textContent = '✓ Correct (+2 Marks)';
+        statusBadge.className = 'text-xs font-bold px-2.5 py-1 rounded-lg bg-emerald-600 text-white';
+      } else {
+        statusBadge.textContent = '✗ Incorrect (0 Marks)';
+        statusBadge.className = 'text-xs font-bold px-2.5 py-1 rounded-lg bg-rose-600 text-white';
+      }
+    }
+
+    function toggleSolutionPanel() {
+      const solCard = document.getElementById('solution-card');
+      const btn = document.getElementById('btn-toggle-solution');
+      const isHidden = solCard.classList.contains('hidden');
+      if (isHidden) {
+        solCard.classList.remove('hidden');
+        btn.textContent = 'Hide Worked Example';
+      } else {
+        solCard.classList.add('hidden');
+        btn.textContent = 'Show Worked Example';
+      }
+    }
+
+    function selectOption(qId, optIdx) {
+      state.answers[qId] = optIdx;
+      saveState();
+      renderAll();
+    }
+
+    function clearCurrentAnswer() {
+      const q = filteredQuestions[state.currentIdx];
+      if (!q) return;
+      delete state.answers[q.id];
+      saveState();
+      renderAll();
+    }
+
+    function toggleReview() {
+      const q = filteredQuestions[state.currentIdx];
+      if (!q) return;
+      state.reviewed[q.id] = !state.reviewed[q.id];
+      saveState();
+      renderAll();
+    }
+
+    function navigateQuestion(delta) {
+      const next = state.currentIdx + delta;
+      if (next >= 0 && next < filteredQuestions.length) {
+        state.currentIdx = next;
+        renderAll();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }
+
+    function jumpToIndex(idx) {
+      state.currentIdx = idx;
+      renderAll();
+    }
+
+    function renderPalette() {
+      const grid = document.getElementById('palette-grid');
+      grid.innerHTML = '';
+
+      const totalAnswered = Object.keys(state.answers).length;
+      document.getElementById('palette-count').textContent = `${totalAnswered} / 60 Answered`;
+      document.getElementById('progress-bar').style.width = `${(totalAnswered / 60) * 100}%`;
+
+      filteredQuestions.forEach((q, idx) => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.textContent = q.id;
+        btn.onclick = () => jumpToIndex(idx);
+
+        const ans = state.answers[q.id];
+        const isCurrent = idx === state.currentIdx;
+        let cls = 'bg-slate-100 text-slate-700 border border-slate-200 hover:bg-slate-200';
+
+        if (state.reviewed[q.id]) {
+          cls = 'bg-amber-400 text-slate-950 font-bold border border-amber-500';
+        } else if (ans !== undefined) {
+          if (state.mode === 'study' || state.examSubmitted) {
+            cls = ans === q.answer
+              ? 'bg-emerald-600 text-white font-bold'
+              : 'bg-rose-500 text-white font-bold';
+          } else {
+            cls = 'bg-emerald-600 text-white font-bold';
+          }
+        }
+
+        if (isCurrent) {
+          cls += ' ring-2 ring-slate-900 ring-offset-1';
+        }
+
+        btn.className = `h-9 rounded-lg text-xs font-semibold transition-all flex items-center justify-center ${cls}`;
+        grid.appendChild(btn);
+      });
+    }
+
+    function renderMiniStats() {
+      const box = document.getElementById('study-mini-stats');
+      if (state.mode === 'exam' && !state.examSubmitted) {
+        box.classList.add('hidden');
+        return;
+      }
+      box.classList.remove('hidden');
+
+      let correct = 0;
+      let wrong = 0;
+      QUESTIONS.forEach(q => {
+        if (state.answers[q.id] !== undefined) {
+          if (state.answers[q.id] === q.answer) correct++;
+          else wrong++;
+        }
+      });
+
+      document.getElementById('stat-correct').textContent = correct;
+      document.getElementById('stat-wrong').textContent = wrong;
+      document.getElementById('stat-marks').textContent = correct * 2;
+    }
+
+    /* =========================================================================
+       SCORECARD & MODALS
+       ========================================================================= */
+    function openSubmitModal() {
+      if (state.mode === 'exam' && state.timerRunning) {
+        toggleTimer(); // pause timer on scorecard view
+      }
+
+      let correct = 0;
+      let wrong = 0;
+      const topicStats = {};
+
+      QUESTIONS.forEach(q => {
+        if (!topicStats[q.topic]) topicStats[q.topic] = { total: 0, correct: 0, attempted: 0 };
+        topicStats[q.topic].total++;
+        if (state.answers[q.id] !== undefined) {
+          topicStats[q.topic].attempted++;
+          if (state.answers[q.id] === q.answer) {
+            correct++;
+            topicStats[q.topic].correct++;
+          } else {
+            wrong++;
+          }
+        }
+      });
+
+      const attempted = correct + wrong;
+      const accuracy = attempted > 0 ? Math.round((correct / attempted) * 100) : 0;
+
+      document.getElementById('sc-marks').textContent = `${correct * 2} / 120`;
+      document.getElementById('sc-accuracy').textContent = `${accuracy}%`;
+      document.getElementById('sc-correct').textContent = correct;
+      document.getElementById('sc-wrong').textContent = wrong;
+
+      const breakdown = document.getElementById('sc-topic-breakdown');
+      breakdown.innerHTML = Object.entries(topicStats).map(([topic, data]) => {
+        const pct = Math.round((data.correct / data.total) * 100);
+        return `
+          <div>
+            <div class="flex justify-between text-xs font-semibold text-slate-700 mb-1">
+              <span>${topic}</span>
+              <span>${data.correct} / ${data.total} Correct (${pct}%)</span>
+            </div>
+            <div class="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden">
+              <div class="h-full bg-emerald-600 rounded-full" style="width: ${pct}%"></div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      document.getElementById('scorecard-modal').classList.remove('hidden');
+    }
+
+    function switchToReviewFromScorecard() {
+      state.examSubmitted = true;
+      state.mode = 'study';
+      closeModal('scorecard-modal');
+      setMode('study');
+    }
+
+    function openAllSolutionsModal() {
+      document.getElementById('formula-modal').classList.remove('hidden');
+    }
+
+    function openResetModal() {
+      document.getElementById('reset-modal').classList.remove('hidden');
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.add('hidden');
+    }
+
+    function confirmReset() {
+      if (state.timerRunning) clearInterval(timerInterval);
+      state = {
+        mode: 'study',
+        answers: {},
+        reviewed: {},
+        currentIdx: 0,
+        timeLeft: DEFAULT_TIME,
+        timerRunning: false,
+        examSubmitted: false
+      };
+      document.getElementById('topic-filter').value = 'all';
+      document.getElementById('type-filter').value = 'all';
+      filteredQuestions = [...QUESTIONS];
+      saveState();
+      closeModal('reset-modal');
+      setMode('study');
+      showToast('Exam progress and timer have been reset.');
+    }
+
+    function showToast(msg) {
+      const box = document.getElementById('toast-box');
+      box.textContent = msg;
+      box.classList.remove('hidden');
+      clearTimeout(window._toastTimeout);
+      window._toastTimeout = setTimeout(() => {
+        box.classList.add('hidden');
+      }, 3000);
+    }
+
+    // Keyboard navigation (Left/Right arrows)
+    document.addEventListener('keydown', (e) => {
+      if (e.target.tagName === 'SELECT' || e.target.tagName === 'INPUT') return;
+      if (e.key === 'ArrowRight') navigateQuestion(1);
+      if (e.key === 'ArrowLeft') navigateQuestion(-1);
+    });
+
+    // Initialize App
+    window.onload = function () {
+      loadState();
+      if (state.mode === 'exam') {
+        document.getElementById('btn-mode-exam').className = 'px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all bg-amber-400 text-slate-950 shadow-sm';
+        document.getElementById('btn-mode-study').className = 'px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all text-emerald-100 hover:text-white';
+      }
+      renderAll();
+    };
+  </script>
+</body>
+</html>
